@@ -6,9 +6,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.baymax104.bookmanager20compose.ui.content.FinishContent
-import com.baymax104.bookmanager20compose.ui.content.MainContent
-import com.baymax104.bookmanager20compose.ui.content.ProgressContent
+import com.baymax104.bookmanager20compose.ui.screen.FinishContent
+import com.baymax104.bookmanager20compose.ui.screen.MainScreen
+import com.baymax104.bookmanager20compose.ui.screen.ProgressContent
 
 /**
  * 导航Host
@@ -25,7 +25,7 @@ fun AppHost(
         startDestination = Nav.Main.route,
         modifier = modifier
     ) {
-        composable(Nav.Main.route) { MainContent() }
+        composable(Nav.Main.route) { MainScreen() }
     }
 }
 

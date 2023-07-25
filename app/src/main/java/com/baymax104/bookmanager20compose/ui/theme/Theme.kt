@@ -13,10 +13,10 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 private val LightColorScheme = lightColorScheme(
     primary = MainColor,
     onPrimary = Color.White,
-    primaryContainer = ContainerColor,
-    secondary = MainColorVariant,
+    primaryContainer = Color.White,
+    secondary = SecondColor,
     onSecondary = Color.White,
-    secondaryContainer = ContainerColor,
+    secondaryContainer = Color.White,
     background = Color.White,
     onBackground = Color.Black,
     surface = Color.White,

@@ -1,4 +1,4 @@
-package com.baymax104.bookmanager20compose.ui.content
+package com.baymax104.bookmanager20compose.ui.screen
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
