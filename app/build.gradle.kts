@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-parcelize")
+    kotlin("plugin.serialization") version "1.8.21"
 }
 
 @Suppress("UnstableApiUsage")
@@ -76,4 +77,13 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation("com.blankj:utilcodex:1.31.1")
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    runtimeOnly("androidx.room:room-runtime:2.4.3")
+    implementation("androidx.room:room-ktx:2.4.3")
+    implementation("androidx.room:room-common:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
+    implementation("com.github.jenly1314:zxing-lite:2.3.1")
 }
