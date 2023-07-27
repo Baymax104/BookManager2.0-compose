@@ -7,7 +7,7 @@ import kotlinx.coroutines.coroutineScope
 /**
  * Requester请求组件
  */
-open class Requester : ViewModel() {
+abstract class Requester : ViewModel() {
     class ResultCallback<T> {
         private var onSuccess: (T) -> Unit = {}
         private var onFail: (Throwable) -> Unit = {}

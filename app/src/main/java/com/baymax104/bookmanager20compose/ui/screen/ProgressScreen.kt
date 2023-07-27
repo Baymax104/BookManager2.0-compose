@@ -9,19 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 
 /**
  * 进度页
  * @author John
  */
-
 @Composable
-fun ProgressContent(
-    appNavController: NavController
-) {
+fun ProgressContent() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -38,8 +33,7 @@ fun ProgressContent(
 @Preview
 @Composable
 fun PreviewProgress() {
-    val navController = rememberNavController()
     BookManagerTheme {
-        ProgressContent(appNavController = navController)
+        ProgressContent()
     }
 }

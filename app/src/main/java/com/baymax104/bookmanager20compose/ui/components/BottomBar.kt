@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.baymax104.bookmanager20compose.ui.navigation.LocalMainNav
 import com.baymax104.bookmanager20compose.ui.navigation.Nav
 import com.baymax104.bookmanager20compose.ui.navigation.mainNavs
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
@@ -30,8 +31,8 @@ import com.baymax104.bookmanager20compose.ui.theme.MainColorShallow
 
 @Composable
 fun BottomBar(
-    navController: NavController,
     navs: List<Nav>,
+    navController: NavController = LocalMainNav.current,
 ) {
     val entry by navController.currentBackStackEntryAsState()
     NavBar {

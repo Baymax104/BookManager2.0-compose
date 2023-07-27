@@ -1,12 +1,17 @@
 package com.baymax104.bookmanager20compose.repo.web
 
 import android.util.Log
+import com.baymax104.bookmanager20compose.base.Requester
 import com.baymax104.bookmanager20compose.repo.API_KEY
 import com.baymax104.bookmanager20compose.repo.BASE_URL
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 /**
@@ -45,8 +50,17 @@ object WebService {
 
         retrofit = Retrofit.Builder()
             .client(client)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .baseUrl(BASE_URL)
             .build()
     }
 
+    inline fun <reified T> create(): T = retrofit.create()
 }
+
+/**
+ * 创建网络服务实例
+ * @param S 服务接口类型
+ * @return 服务实例
+ */
+inline fun <reified S> Requester.createService(): Lazy<S> = lazy { WebService.create() }
