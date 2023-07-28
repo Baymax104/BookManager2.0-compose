@@ -1,6 +1,5 @@
 package com.baymax104.bookmanager20compose.util
 
-import androidx.core.text.isDigitsOnly
 import androidx.room.TypeConverter
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -23,7 +22,7 @@ fun Date?.toDateString(detail: Boolean = false) =
     this?.let {
         val formatter = if (detail) DateDetailFormatter else DateFormatter
         formatter.format(this)
-    } ?: ""
+    }
 
 // ================================= JSON Convertor ================================================
 

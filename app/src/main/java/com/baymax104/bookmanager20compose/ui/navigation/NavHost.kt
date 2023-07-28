@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.baymax104.bookmanager20compose.ui.screen.FinishContent
 import com.baymax104.bookmanager20compose.ui.screen.MainScreen
-import com.baymax104.bookmanager20compose.ui.screen.ProgressContent
+import com.baymax104.bookmanager20compose.ui.screen.ProgressScreen
 
 /**
  * APP导航Host
@@ -44,7 +44,7 @@ fun MainHost(
         startDestination = Nav.Progress.route,
         modifier = modifier
     ) {
-        composable(Nav.Progress.route) { ProgressContent() }
+        composable(Nav.Progress.route) { ProgressScreen() }
         composable(Nav.Finish.route) { FinishContent() }
     }
 }

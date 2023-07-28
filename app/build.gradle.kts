@@ -1,10 +1,10 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     kotlin("plugin.serialization") version "1.8.21"
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 @Suppress("UnstableApiUsage")
@@ -85,6 +85,7 @@ dependencies {
     runtimeOnly(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.room.common)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.zxing.lite)
+    implementation(libs.compose.material.dialogs.core)
 }

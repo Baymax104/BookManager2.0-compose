@@ -1,7 +1,6 @@
 package com.baymax104.bookmanager20compose.repo.web
 
 import android.util.Log
-import com.baymax104.bookmanager20compose.base.Requester
 import com.baymax104.bookmanager20compose.repo.API_KEY
 import com.baymax104.bookmanager20compose.repo.BASE_URL
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -63,4 +62,4 @@ object WebService {
  * @param S 服务接口类型
  * @return 服务实例
  */
-inline fun <reified S> Requester.createService(): Lazy<S> = lazy { WebService.create() }
+inline fun <reified S> createService(): Lazy<S> = lazy { WebService.create() }

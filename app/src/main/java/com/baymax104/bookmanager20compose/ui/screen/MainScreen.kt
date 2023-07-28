@@ -1,5 +1,6 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -22,17 +23,22 @@ import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.blankj.utilcode.util.ToastUtils
 import kotlinx.coroutines.launch
 
-/**
- * 应用布局框架
- * @author John
- */
 
+/**
+ * 主页
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val mainNavController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    if (drawerState.isOpen) {
+        BackHandler {
+            scope.launch { drawerState.close() }
+        }
+    }
 
     CompositionLocalProvider(LocalMainNav provides mainNavController) {
         Drawer(drawerState) {
@@ -48,6 +54,11 @@ fun MainScreen() {
     }
 }
 
+/**
+ * 主页框架
+ * @param onLeftNavClick 左侧导航按钮回调
+ * @param onActionClick 右侧行为按钮回调
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainContent(

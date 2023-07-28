@@ -66,13 +66,12 @@ fun DrawerSheet(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ModalDrawerSheet(
-        drawerContentColor = Color.White,
-        drawerContainerColor = Color.White,
         content = content,
         modifier = Modifier
             .fillMaxWidth(0.8f)
             .fillMaxHeight()
             .background(Color.Transparent),
+        drawerTonalElevation = 0.dp
     )
 }
 
@@ -80,16 +79,17 @@ fun DrawerSheet(
 @Composable
 fun DrawerButton(
     label: String,
-    icon: Int
+    icon: Int,
+    onClick: () -> Unit = {}
 ) {
     Surface(
-        shape = RoundedCornerShape(25.dp),
+        shape = RoundedCornerShape(100),
         contentColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
             .padding(horizontal = 15.dp),
-        onClick = {}
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
@@ -136,7 +136,7 @@ fun DrawerHeader(onCloseClick: () -> Unit) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewDrawer() {
     BookManagerTheme {

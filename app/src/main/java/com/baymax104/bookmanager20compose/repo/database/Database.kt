@@ -20,6 +20,24 @@ abstract class LocalDatabase : RoomDatabase() {
 
     abstract fun bookMapper(): BookMapper
 
+    inline fun <reified T> create(): T {
+        val methods = javaClass.declaredMethods
+        for (method in methods) {
+            if (method.returnType == T::class.java) {
+                method.isAccessible = true
+                return method(this) as? T ?: throw IllegalArgumentException("Database Mapper not found")
+            }
+        }
+        throw IllegalArgumentException("Database Mapper not found")
+    }
+
 }
 
 lateinit var Database: LocalDatabase
+
+/**
+ * 创建数据库Mapper实例
+ * @param T Mapper类型
+ * @return Mapper实例
+ */
+inline fun <reified T> createMapper(): Lazy<T> = lazy { Database.create() }
