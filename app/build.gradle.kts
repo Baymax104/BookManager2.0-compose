@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.navigation.common.ktx)
     implementation(libs.navigation.ui.ktx)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.navigation.animation)
     implementation(libs.utilcodex)
     implementation(libs.reorderable)
     implementation(libs.kotlin.serialization.json)

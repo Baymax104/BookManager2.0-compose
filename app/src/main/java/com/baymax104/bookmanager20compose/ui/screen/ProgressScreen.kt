@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,26 +27,30 @@ import com.baymax104.bookmanager20compose.base.rememberApplicationViewModel
 import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.request.ProgressRequester
 import com.baymax104.bookmanager20compose.states.ProgressStateHolder
-import com.baymax104.bookmanager20compose.ui.components.FloatingButton
+import com.baymax104.bookmanager20compose.ui.components.AddDialog
+import com.baymax104.bookmanager20compose.ui.components.FloatingButtonMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.blankj.utilcode.util.ToastUtils
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ProgressScreen() {
-    val progressStateHolder: ProgressStateHolder = rememberAdjoinViewModel()
+    val stateHolder: ProgressStateHolder = rememberAdjoinViewModel()
     val requester: ProgressRequester = rememberApplicationViewModel()
     LaunchedEffect(Unit) {
+        stateHolder.bookListFlow.emit(requester.queryProgressBook())
     }
-    ProgressContent(states = progressStateHolder)
+    ProgressContent(states = stateHolder)
 }
 
 /**
  * 进度页
  */
 @Composable
-fun ProgressContent(states: ProgressStateHolder) {
+private fun ProgressContent(states: ProgressStateHolder) {
     val bookListState by states.bookListFlow.collectAsState()
+    val dialogState = rememberMaterialDialogState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,12 +58,34 @@ fun ProgressContent(states: ProgressStateHolder) {
         contentAlignment = Alignment.Center
     ) {
         ProgressListContent(bookListState)
-        FloatingButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
+//        FloatingButton(
+//            modifier = Modifier
+//                .align(Alignment.BottomEnd)
+//                .padding(end = 20.dp, bottom = 25.dp)
+//        ) {
+//            dialogState.show()
+//        }
+        FloatingButtonMenu(
+            size = 60.dp,
+            icon = R.drawable.add,
+            modifier = Modifier.align(Alignment.BottomEnd)
                 .padding(end = 20.dp, bottom = 25.dp)
         ) {
-            ToastUtils.showShort("点击")
+            item(
+                icon = R.drawable.add,
+                label = { Text(text = "Hello", style = MaterialTheme.typography.labelSmall) },
+            ) {
+
+            }
+            item(
+                icon = R.drawable.add,
+                label = { Text(text = "Hello", style = MaterialTheme.typography.labelSmall) },
+            ) {
+
+            }
+        }
+        AddDialog(dialogState) {
+            ToastUtils.showShort("$it")
         }
     }
 }
@@ -66,7 +94,7 @@ fun ProgressContent(states: ProgressStateHolder) {
  * 进度列表页
  */
 @Composable
-fun ProgressListContent(books: List<Book>) {
+private fun ProgressListContent(books: List<Book>) {
     if (books.isEmpty()) {
         Image(painter = painterResource(id = R.drawable.no_data), contentDescription = null)
     } else {

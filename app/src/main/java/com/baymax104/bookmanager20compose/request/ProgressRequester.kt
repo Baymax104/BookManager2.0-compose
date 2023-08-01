@@ -12,12 +12,15 @@ class ProgressRequester : Requester() {
 
     val repo = Repository
 
-    suspend fun requestBook(isbn: String): Book {
+    suspend fun requestBook(isbn: String): Book? {
         val response = repo.requestBook(isbn)
-        if (response.errcode == 0) {
-
+        return when (response.errcode) {
+            0 -> response.data
+            else -> null
         }
-        return Book()
     }
+
+    suspend fun queryProgressBook(): MutableList<Book> = repo.queryAllProgressBook()
+
 
 }

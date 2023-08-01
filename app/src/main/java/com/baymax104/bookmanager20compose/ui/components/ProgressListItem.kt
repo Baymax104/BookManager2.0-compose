@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,8 +59,10 @@ fun LazyItemScope.ProgressItem(
             modifier = Modifier.padding(10.dp)
         ) {
             Text(
-                text = book.title ?: "",
-                modifier = Modifier.weight(1f),
+                text = book.title ?: "test",
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentSize(),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
@@ -114,7 +118,7 @@ fun LazyItemScope.ProgressItem(
 }
 
 @Composable
-fun ProgressBar(
+private fun ProgressBar(
     progress: Int,
     total: Int,
     modifier: Modifier = Modifier
@@ -157,7 +161,9 @@ private fun DrawScope.drawIndicator(
 @Composable
 fun PreviewProgressItem() {
     BookManagerTheme {
-//        ProgressItem()
+        LazyColumn {
+            item { ProgressItem() }
+        }
 //        ProgressBar(progress = 50, 100)
     }
 }

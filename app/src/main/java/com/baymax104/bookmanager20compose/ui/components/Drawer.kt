@@ -62,7 +62,7 @@ fun Drawer(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerSheet(
+private fun DrawerSheet(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ModalDrawerSheet(
@@ -77,7 +77,7 @@ fun DrawerSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerButton(
+private fun DrawerButton(
     label: String,
     icon: Int,
     onClick: () -> Unit = {}
@@ -107,7 +107,7 @@ fun DrawerButton(
 }
 
 @Composable
-fun DrawerHeader(onCloseClick: () -> Unit) {
+private fun DrawerHeader(onCloseClick: () -> Unit) {
     Surface(
         contentColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier

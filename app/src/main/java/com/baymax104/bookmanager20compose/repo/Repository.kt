@@ -13,13 +13,15 @@ import kotlinx.coroutines.withContext
  */
 object Repository {
 
-    val bookService: BookService by createService()
-    val bookMapper: BookMapper by createMapper()
+    private val bookService: BookService by createService()
+    private val bookMapper: BookMapper by createMapper()
 
     suspend fun requestBook(isbn: String) = withContext(Dispatchers.IO) {
         bookService.requestBook(isbn)
     }
 
-    suspend fun queryAllProgressBook() = bookMapper.queryAllProcess()
+    suspend fun queryAllProgressBook() = withContext(Dispatchers.IO) {
+        bookMapper.queryAllProcess()
+    }
 
 }

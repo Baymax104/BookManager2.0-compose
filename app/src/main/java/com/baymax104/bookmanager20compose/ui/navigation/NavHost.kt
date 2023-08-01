@@ -1,26 +1,30 @@
 package com.baymax104.bookmanager20compose.ui.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.baymax104.bookmanager20compose.ui.screen.FinishContent
 import com.baymax104.bookmanager20compose.ui.screen.MainScreen
 import com.baymax104.bookmanager20compose.ui.screen.ProgressScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 
 /**
  * APP导航Host
  * @param appNavController APP导航HostController
  * @param modifier modifier
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppHost(
     modifier: Modifier = Modifier,
     appNavController: NavHostController = LocalAppNav.current
 ) {
-    NavHost(
+    AnimatedNavHost(
         navController = appNavController,
         startDestination = Nav.Main.route,
         modifier = modifier
@@ -34,18 +38,32 @@ fun AppHost(
  * @param navHostController 主页导航HostController
  * @param modifier modifier
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainHost(
     modifier: Modifier = Modifier,
     navHostController: NavHostController = LocalMainNav.current
 ) {
-    NavHost(
+    AnimatedNavHost(
         navController = navHostController,
         startDestination = Nav.Progress.route,
         modifier = modifier
     ) {
-        composable(Nav.Progress.route) { ProgressScreen() }
-        composable(Nav.Finish.route) { FinishContent() }
+        composable(
+            route = Nav.Progress.route,
+            enterTransition = { slideInHorizontally { -it } },
+            exitTransition = { slideOutHorizontally { -it } }
+        ) {
+            ProgressScreen()
+        }
+        composable(
+            route = Nav.Finish.route,
+            enterTransition = { slideInHorizontally { it } },
+            exitTransition = { slideOutHorizontally { it } }
+        ) {
+            FinishContent()
+        }
+
     }
 }
 

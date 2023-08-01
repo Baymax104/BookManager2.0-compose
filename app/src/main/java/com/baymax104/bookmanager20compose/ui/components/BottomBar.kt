@@ -49,6 +49,9 @@ fun BottomBar(
                     }
                     launchSingleTop = true
                     restoreState = true
+                    anim {
+
+                    }
                 }
             }
         }
@@ -56,7 +59,7 @@ fun BottomBar(
 }
 
 @Composable
-fun NavBar(content: @Composable RowScope.() -> Unit) {
+private fun NavBar(content: @Composable RowScope.() -> Unit) {
     NavigationBar(
         contentColor = MaterialTheme.colorScheme.primary,
         containerColor = ContainerColor,
@@ -66,7 +69,7 @@ fun NavBar(content: @Composable RowScope.() -> Unit) {
 }
 
 @Composable
-fun RowScope.NavItem(
+private fun RowScope.NavItem(
     selected: Boolean,
     nav: Nav,
     onClick: () -> Unit,

@@ -45,5 +45,18 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    titleMedium = TextStyle(
+        fontFamily = BookManagerFont,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 1.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = BookManagerFont,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
 )

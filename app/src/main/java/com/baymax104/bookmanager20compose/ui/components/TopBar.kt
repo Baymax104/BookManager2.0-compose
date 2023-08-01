@@ -49,7 +49,7 @@ fun TopBar(
 }
 
 @Composable
-fun ActionButton(id: Int, onClick: () -> Unit) {
+private fun ActionButton(id: Int, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(id = id),

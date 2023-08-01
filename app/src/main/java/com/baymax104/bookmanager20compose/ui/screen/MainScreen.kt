@@ -1,6 +1,7 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -12,7 +13,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
 import com.baymax104.bookmanager20compose.ui.components.TopBar
@@ -21,16 +21,17 @@ import com.baymax104.bookmanager20compose.ui.navigation.MainHost
 import com.baymax104.bookmanager20compose.ui.navigation.mainNavs
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.blankj.utilcode.util.ToastUtils
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 
 
 /**
  * 主页
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen() {
-    val mainNavController = rememberNavController()
+    val mainNavController = rememberAnimatedNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -61,7 +62,7 @@ fun MainScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainContent(
+private fun MainContent(
     onLeftNavClick: () -> Unit,
     onActionClick: () -> Unit
 ) {
