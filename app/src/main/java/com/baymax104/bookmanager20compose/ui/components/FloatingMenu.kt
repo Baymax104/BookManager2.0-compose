@@ -40,11 +40,12 @@ import com.baymax104.bookmanager20compose.ui.components.FloatingMenuState.Values
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 
 @Composable
-fun FloatingButtonMenu(
+fun FloatingMenu(
     size: Dp,
     icon: Int,
     modifier: Modifier = Modifier,
-    state: FloatingMenuState = rememberFloatingButtonMenuState(),
+    state: FloatingMenuState = rememberFloatingMenuState(),
+    clickClose: Boolean = true,
     contentPadding: Dp = 10.dp,
     content: FloatingMenuScope.() -> Unit
 ) {
@@ -97,6 +98,8 @@ fun FloatingButtonMenu(
             FloatingMenuButton(
                 size = size,
                 item = item,
+                clickClose = clickClose,
+                state = state,
                 modifier = Modifier
                     .padding(bottom = paddingAnims[index].dp)
                     .alpha(alphaAnims[index])
@@ -121,6 +124,8 @@ fun FloatingButtonMenu(
 private fun FloatingMenuButton(
     size: Dp,
     item: FloatingMenuItem,
+    clickClose: Boolean,
+    state: FloatingMenuState,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -135,7 +140,12 @@ private fun FloatingMenuButton(
             contentColor = item.labelColor()
         )
         FloatingActionButton(
-            onClick = item.onClick,
+            onClick = {
+                item.onClick()
+                if (clickClose) {
+                    state.close()
+                }
+            },
             shape = CircleShape,
             contentColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(size),
@@ -297,7 +307,7 @@ class FloatingMenuScope {
  * @return 悬浮菜单Remember状态
  */
 @Composable
-fun rememberFloatingButtonMenuState(
+fun rememberFloatingMenuState(
     initialValue: Values = Values.Closed
 ): FloatingMenuState {
    return rememberSaveable(saver = FloatingMenuState.Saver) {
@@ -309,7 +319,7 @@ fun rememberFloatingButtonMenuState(
 @Composable
 fun PreviewFloating() {
     BookManagerTheme {
-        FloatingButtonMenu(
+        FloatingMenu(
             size = 50.dp,
             icon = R.drawable.add
         ) {

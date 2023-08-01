@@ -27,12 +27,10 @@ import com.baymax104.bookmanager20compose.base.rememberApplicationViewModel
 import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.request.ProgressRequester
 import com.baymax104.bookmanager20compose.states.ProgressStateHolder
-import com.baymax104.bookmanager20compose.ui.components.AddDialog
-import com.baymax104.bookmanager20compose.ui.components.FloatingButtonMenu
+import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
+import com.baymax104.bookmanager20compose.ui.components.rememberFloatingMenuState
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
-import com.blankj.utilcode.util.ToastUtils
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ProgressScreen() {
@@ -50,7 +48,7 @@ fun ProgressScreen() {
 @Composable
 private fun ProgressContent(states: ProgressStateHolder) {
     val bookListState by states.bookListFlow.collectAsState()
-    val dialogState = rememberMaterialDialogState()
+    val floatingMenuState = rememberFloatingMenuState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,34 +56,26 @@ private fun ProgressContent(states: ProgressStateHolder) {
         contentAlignment = Alignment.Center
     ) {
         ProgressListContent(bookListState)
-//        FloatingButton(
-//            modifier = Modifier
-//                .align(Alignment.BottomEnd)
-//                .padding(end = 20.dp, bottom = 25.dp)
-//        ) {
-//            dialogState.show()
-//        }
-        FloatingButtonMenu(
+        FloatingMenu(
             size = 60.dp,
             icon = R.drawable.add,
-            modifier = Modifier.align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 25.dp)
+            state = floatingMenuState,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 20.dp, bottom = 25.dp),
         ) {
             item(
-                icon = R.drawable.add,
-                label = { Text(text = "Hello", style = MaterialTheme.typography.labelSmall) },
+                icon = R.drawable.scan,
+                label = { Text(text = "扫码录入", style = MaterialTheme.typography.labelSmall) },
             ) {
 
             }
             item(
-                icon = R.drawable.add,
-                label = { Text(text = "Hello", style = MaterialTheme.typography.labelSmall) },
+                icon = R.drawable.input,
+                label = { Text(text = "手动录入", style = MaterialTheme.typography.labelSmall) },
             ) {
 
             }
-        }
-        AddDialog(dialogState) {
-            ToastUtils.showShort("$it")
         }
     }
 }
