@@ -27,6 +27,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun BookManagerTheme(
+    isDarkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val view = LocalView.current
@@ -35,7 +36,7 @@ fun BookManagerTheme(
         SideEffect {
             val window = (view.context as Activity).window
             WindowCompat.setDecorFitsSystemWindows(window, false)
-            systemUiController.setStatusBarColor(Color.Transparent, true)
+            systemUiController.setStatusBarColor(Color.Transparent, isDarkTheme)
         }
     }
 

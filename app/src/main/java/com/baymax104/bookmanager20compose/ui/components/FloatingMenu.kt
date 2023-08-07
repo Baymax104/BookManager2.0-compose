@@ -39,6 +39,19 @@ import com.baymax104.bookmanager20compose.ui.components.FloatingMenuScope.Floati
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenuState.Values
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 
+
+/**
+ * 悬浮按钮菜单
+ *
+ * @param size 按钮大小
+ * @param icon Icon资源id
+ * @param modifier [Modifier]
+ * @param state [FloatingMenuState]
+ * @param clickClose 点击后是否自动关闭
+ * @param contentPadding 菜单按钮间距
+ * @param content 子按钮作用域
+ * @receiver [FloatingMenuScope]
+ */
 @Composable
 fun FloatingMenu(
     size: Dp,
@@ -180,7 +193,7 @@ private fun FloatingMainMenuButton(
     )
     Row(horizontalArrangement = Arrangement.End) {
         FloatingActionButton(
-            onClick = { state.inverse() },
+            onClick = { state.toggle() },
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = 3.dp
             ),
@@ -235,7 +248,7 @@ class FloatingMenuState(
         currentState = Values.Closed
     }
 
-    fun inverse() {
+    fun toggle() {
         currentState = when(currentState) {
             Values.Open -> Values.Closed
             Values.Closed -> Values.Open

@@ -7,7 +7,6 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "com.baymax104.bookmanager20compose"
     compileSdk = 33
@@ -32,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -45,9 +44,21 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.0"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildToolsVersion = "34.0.0"
+}
+
+kotlin {
+    sourceSets {
+        debug {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        release {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
         }
     }
 }
@@ -56,8 +67,9 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.appcompat)
     implementation(libs.activity.compose)
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -65,7 +77,7 @@ dependencies {
     testImplementation(libs.junit.core)
     androidTestImplementation(libs.junit.android.ext)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -74,8 +86,10 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.common.ktx)
     implementation(libs.navigation.ui.ktx)
+    implementation(libs.compose.destinations.core)
+    ksp(libs.compose.destinations.ksp)
     implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.navigation.animation)
+    implementation(libs.accompanist.permissions)
     implementation(libs.utilcodex)
     implementation(libs.reorderable)
     implementation(libs.kotlin.serialization.json)

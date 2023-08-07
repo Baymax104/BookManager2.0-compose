@@ -1,7 +1,10 @@
 package com.baymax104.bookmanager20compose.ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -9,49 +12,38 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.baymax104.bookmanager20compose.ui.navigation.LocalMainNav
-import com.baymax104.bookmanager20compose.ui.navigation.Nav
-import com.baymax104.bookmanager20compose.ui.navigation.mainNavs
+import com.baymax104.bookmanager20compose.ui.screen.IndexPage
+import com.baymax104.bookmanager20compose.ui.screen.indexPages
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.ContainerColor
+import kotlinx.coroutines.launch
 
 /**
  * 底部导航栏
  * @author John
  */
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomBar(
-    navs: List<Nav>,
-    navController: NavController = LocalMainNav.current,
+    indexPages: List<IndexPage>,
+    pagerState: PagerState
 ) {
-    val entry by navController.currentBackStackEntryAsState()
+    val scope = rememberCoroutineScope()
     NavBar {
-        navs.forEach { nav ->
-            val current = entry?.destination?.route
+        indexPages.forEachIndexed { index, item ->
             NavItem(
-                selected = current == nav.route,
-                nav = nav
+                selected = pagerState.currentPage == index,
+                indexPage = item
             ) {
-                navController.navigate(nav.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                    anim {
-
-                    }
+                if (pagerState.currentPage != index) {
+                    scope.launch { pagerState.animateScrollToPage(index) }
                 }
             }
         }
@@ -71,14 +63,14 @@ private fun NavBar(content: @Composable RowScope.() -> Unit) {
 @Composable
 private fun RowScope.NavItem(
     selected: Boolean,
-    nav: Nav,
+    indexPage: IndexPage,
     onClick: () -> Unit,
 ) {
     NavigationBarItem(
         selected = selected,
         icon = {
             Icon(
-                painter = painterResource(id = nav.icon),
+                painter = painterResource(id = indexPage.icon),
                 contentDescription = null,
                 modifier = Modifier.size(28.dp)
             )
@@ -91,7 +83,7 @@ private fun RowScope.NavItem(
         ),
         label = {
             Text(
-                text = nav.label,
+                text = indexPage.label,
                 style = MaterialTheme.typography.labelSmall
             )
         },
@@ -99,11 +91,12 @@ private fun RowScope.NavItem(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PreviewNav() {
-    val navController = rememberNavController()
+    val pagerState = rememberPagerState()
     BookManagerTheme {
-        BottomBar(navController = navController, navs = mainNavs)
+        BottomBar(pagerState = pagerState, indexPages = indexPages)
     }
 }

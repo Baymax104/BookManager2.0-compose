@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,26 +27,33 @@ import com.baymax104.bookmanager20compose.request.ProgressRequester
 import com.baymax104.bookmanager20compose.states.ProgressStateHolder
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
-import com.baymax104.bookmanager20compose.ui.components.rememberFloatingMenuState
+import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 @Composable
-fun ProgressScreen() {
+fun ProgressScreen(navigator: DestinationsNavigator) {
     val stateHolder: ProgressStateHolder = rememberAdjoinViewModel()
     val requester: ProgressRequester = rememberApplicationViewModel()
     LaunchedEffect(Unit) {
         stateHolder.bookListFlow.emit(requester.queryProgressBook())
     }
-    ProgressContent(states = stateHolder)
+    ProgressContent(
+        states = stateHolder,
+        navigator = navigator
+    )
 }
 
 /**
  * 进度页
  */
 @Composable
-private fun ProgressContent(states: ProgressStateHolder) {
+private fun ProgressContent(
+    states: ProgressStateHolder,
+    navigator: DestinationsNavigator
+) {
     val bookListState by states.bookListFlow.collectAsState()
-    val floatingMenuState = rememberFloatingMenuState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -59,21 +64,14 @@ private fun ProgressContent(states: ProgressStateHolder) {
         FloatingMenu(
             size = 60.dp,
             icon = R.drawable.add,
-            state = floatingMenuState,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 20.dp, bottom = 25.dp),
         ) {
-            item(
-                icon = R.drawable.scan,
-                label = { Text(text = "扫码录入", style = MaterialTheme.typography.labelSmall) },
-            ) {
-
+            item(icon = R.drawable.scan) {
+                navigator.navigate(ScanScreenDestination)
             }
-            item(
-                icon = R.drawable.input,
-                label = { Text(text = "手动录入", style = MaterialTheme.typography.labelSmall) },
-            ) {
+            item(icon = R.drawable.input) {
 
             }
         }
@@ -108,6 +106,6 @@ private fun ProgressListContent(books: List<Book>) {
 @Composable
 fun PreviewProgress() {
     BookManagerTheme {
-        ProgressScreen()
+        ProgressScreen(EmptyDestinationsNavigator)
     }
 }
