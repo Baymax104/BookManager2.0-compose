@@ -27,11 +27,29 @@ val Typography = Typography(
         fontWeight = FontWeight.Black,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
+    titleMedium = TextStyle(
+        fontFamily = BookManagerFont,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 1.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
     bodyLarge = TextStyle(
         fontFamily = BookManagerFont,
         fontSize = 16.sp,
-        letterSpacing = 0.5.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = BookManagerFont,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    bodySmall = TextStyle(
+        fontFamily = BookManagerFont,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Normal,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
     labelMedium = TextStyle(
@@ -46,17 +64,10 @@ val Typography = Typography(
         fontSize = 12.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
-    titleMedium = TextStyle(
+    displayMedium = TextStyle(
         fontFamily = BookManagerFont,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Medium,
-        letterSpacing = 1.sp,
-        platformStyle = PlatformTextStyle(includeFontPadding = false)
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = BookManagerFont,
-        fontSize = 14.sp,
         fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
 )

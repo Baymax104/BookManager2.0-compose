@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val LightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = MainColor,
     onPrimary = Color.White,
     primaryContainer = Color.White,
@@ -41,7 +41,7 @@ fun BookManagerTheme(
     }
 
     MaterialTheme(
-        colorScheme = LightColorScheme,
+        colorScheme = lightColorScheme,
         typography = Typography,
         content = content
     )

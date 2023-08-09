@@ -1,5 +1,6 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +28,11 @@ import com.baymax104.bookmanager20compose.request.ProgressRequester
 import com.baymax104.bookmanager20compose.states.ProgressStateHolder
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
+import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
+import com.baymax104.bookmanager20compose.util.requestPermission
+import com.blankj.utilcode.util.ToastUtils
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
@@ -69,10 +73,13 @@ private fun ProgressContent(
                 .padding(end = 20.dp, bottom = 25.dp),
         ) {
             item(icon = R.drawable.scan) {
-                navigator.navigate(ScanScreenDestination)
+                requestPermission(Manifest.permission.CAMERA) {
+                    granted { navigator.navigate(ScanScreenDestination) }
+                    denied { ToastUtils.showShort("权限申请失败，请到权限中心开启权限") }
+                }
             }
             item(icon = R.drawable.input) {
-
+                navigator.navigate(ManualAddSheetDestination)
             }
         }
     }

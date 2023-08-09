@@ -1,5 +1,6 @@
 package com.baymax104.bookmanager20compose.repo
 
+import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.repo.database.BookMapper
 import com.baymax104.bookmanager20compose.repo.database.createMapper
 import com.baymax104.bookmanager20compose.repo.web.BookService
@@ -22,6 +23,10 @@ object Repository {
 
     suspend fun queryAllProgressBook() = withContext(Dispatchers.IO) {
         bookMapper.queryAllProcess()
+    }
+
+    suspend fun insertProgressBook(book: Book) = withContext(Dispatchers.IO) {
+
     }
 
 }

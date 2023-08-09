@@ -14,20 +14,44 @@ espresso-core = "3.5.1"
 androidx-navigation = "2.6.0"
 compose-destinations = "1.9.42-beta"
 accompanist = "0.30.1"
+material = "1.4.3"
+ui-test-manifest = "1.4.3"
+ui-tooling = "1.4.3"
+ui-test-junit4 = "1.4.3"
+material3 = "1.0.1"
+ui-tooling-preview = "1.4.3"
+ui-graphics = "1.4.3"
+ui = "1.4.3"
+
+coil = "2.4.0"
+compressor = "3.0.1"
+
 utilcodex = "1.31.1"
+
 reorderable = "0.9.6"
-kotlinx-serialization-json = "1.5.1"
+
 retrofit = "2.9.0"
 okhttp = "4.11.0"
 logging-interceptor = "4.10.0"
+
 room = "2.5.2"
 room-complier = "2.5.1"
+
 zxing-lite = "2.4.0"
+
+kotlinx-serialization-json = "1.5.1"
 retrofit-kotlinx-serialization-convertor = "1.0.0"
-compose-materia-dialogs-core = "0.8.1-rc"
 
 [libraries]
+androidx-material = { module = "androidx.compose.material:material", version = "material" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-navigation-navigation-safe-args-gradle-plugin2 = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation-navigation-safe-args-gradle-plugin2" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "ui-test-manifest" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "ui-tooling" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "ui-test-junit4" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui-tooling-preview" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "ui-graphics" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "kotlin" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -47,7 +71,6 @@ compose-destinations-core = { module = "io.github.raamcosta.compose-destinations
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
 
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
@@ -64,5 +87,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-co
 
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }
-compose-material-dialogs-core = { module = "io.github.vanpra.compose-material-dialogs:core", version = "0.9.0" }
 zxing-lite = { module = "com.github.jenly1314:zxing-lite", version.ref = "zxing-lite" }
+compressor = { module = "id.zelory:compressor", version.ref = "compressor" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
