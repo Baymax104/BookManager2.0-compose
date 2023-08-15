@@ -11,21 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.base.rememberAdjoinViewModel
-import com.baymax104.bookmanager20compose.base.rememberApplicationViewModel
 import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.request.ProgressRequester
-import com.baymax104.bookmanager20compose.states.ProgressStateHolder
+import com.baymax104.bookmanager20compose.states.BookStateHolder
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
@@ -35,16 +32,28 @@ import com.baymax104.bookmanager20compose.util.requestPermission
 import com.blankj.utilcode.util.ToastUtils
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultRecipient
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 
 @Composable
-fun ProgressScreen(navigator: DestinationsNavigator) {
-    val stateHolder: ProgressStateHolder = rememberAdjoinViewModel()
-    val requester: ProgressRequester = rememberApplicationViewModel()
-    LaunchedEffect(Unit) {
-        stateHolder.bookListFlow.emit(requester.queryProgressBook())
+fun ProgressScreen(
+    navigator: DestinationsNavigator,
+    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
+) {
+    val stateHolder: BookStateHolder = viewModel()
+    val scope = rememberCoroutineScope()
+    val bookListState = remember { stateHolder.bookList }
+    manualAddRecipient.onNavResult {
+        when (it) {
+            is NavResult.Canceled -> {}
+            is NavResult.Value -> {
+                stateHolder.insertBook(it.value)
+            }
+        }
     }
     ProgressContent(
-        states = stateHolder,
+        books = bookListState,
         navigator = navigator
     )
 }
@@ -54,17 +63,16 @@ fun ProgressScreen(navigator: DestinationsNavigator) {
  */
 @Composable
 private fun ProgressContent(
-    states: ProgressStateHolder,
-    navigator: DestinationsNavigator
+    books: List<Book>,
+    navigator: DestinationsNavigator,
 ) {
-    val bookListState by states.bookListFlow.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
-        ProgressListContent(bookListState)
+        ProgressListContent(books = books)
         FloatingMenu(
             size = 60.dp,
             icon = R.drawable.add,
@@ -101,7 +109,6 @@ private fun ProgressListContent(books: List<Book>) {
             items(
                 items = books,
                 key = { it.id },
-                contentType = { it.id }
             ) {
                 ProgressItem(it)
             }
@@ -113,6 +120,9 @@ private fun ProgressListContent(books: List<Book>) {
 @Composable
 fun PreviewProgress() {
     BookManagerTheme {
-        ProgressScreen(EmptyDestinationsNavigator)
+        ProgressScreen(
+            navigator = EmptyDestinationsNavigator,
+            manualAddRecipient = EmptyResultRecipient()
+        )
     }
 }

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,6 +56,7 @@ fun Drawer(
             }
         },
         drawerState = drawerState,
+        gesturesEnabled = false,
         content = content,
     )
 }
@@ -68,8 +69,7 @@ private fun DrawerSheet(
     ModalDrawerSheet(
         content = content,
         modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .fillMaxHeight()
+            .fillMaxSize()
             .background(Color.Transparent),
         drawerTonalElevation = 0.dp
     )

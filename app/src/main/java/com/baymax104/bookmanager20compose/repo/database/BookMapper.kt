@@ -18,7 +18,7 @@ interface BookMapper {
     suspend fun insertProcess(book: Book): Long
 
     @Query("select * from Book where progress < 100 order by tableRank asc")
-    suspend fun queryAllProcess(): MutableList<Book>
+    fun queryAllProcess(): MutableList<Book>
 
     @Query("select * from Book where progress >= 100 order by tableRank asc")
     suspend fun queryAllFinish(): MutableList<Book>

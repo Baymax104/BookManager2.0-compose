@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.baymax104.bookmanager20compose.entity.Book
+import com.baymax104.bookmanager20compose.entity.History
 import com.baymax104.bookmanager20compose.util.RoomConverter
 
 /**
@@ -11,7 +12,7 @@ import com.baymax104.bookmanager20compose.util.RoomConverter
  * @author John
  */
 @TypeConverters(RoomConverter::class)
-@Database(entities = [Book::class], version = 1, exportSchema = false)
+@Database(entities = [Book::class, History::class], version = 3, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
 
     companion object {

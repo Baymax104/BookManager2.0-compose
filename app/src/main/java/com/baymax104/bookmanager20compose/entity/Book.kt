@@ -1,8 +1,12 @@
 package com.baymax104.bookmanager20compose.entity
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.baymax104.bookmanager20compose.util.PageSerializer
+import com.baymax104.bookmanager20compose.util.toDate
+import com.baymax104.bookmanager20compose.util.toDateString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -14,63 +18,69 @@ import java.util.Date
  */
 @Serializable
 @Entity
-class Book {
+data class Book(
     @Transient
-    @PrimaryKey
-    var id = 0
-    var title: String? = null
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var title: String? = null,
     @Serializable(PageSerializer::class)
-    var page = 0
-    var author: String? = null
-    var progress = 0
+    var page: Int = 0,
+    var author: String? = null,
+    var progress: Int = 0,
     @Transient
-    var startTime: Date? = null
+    var startTime: Date? = null,
     @Transient
-    var endTime: Date? = null
+    var endTime: Date? = null,
     @SerialName("img")
-    var photo: String? = null
-    var publisher: String? = null
-    var isbn: String? = null
+    var photo: String? = null,
+    var publisher: String? = null,
+    var isbn: String? = null,
     @SerialName("summary")
-    var description: String? = null
-    var tableRank = -1
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Book) return false
+    var description: String? = null,
+    var tableRank: Int = -1,
+) : Parcelable {
 
-        if (id != other.id) return false
-        if (title != other.title) return false
-        if (page != other.page) return false
-        if (author != other.author) return false
-        if (progress != other.progress) return false
-        if (startTime != other.startTime) return false
-        if (endTime != other.endTime) return false
-        if (photo != other.photo) return false
-        if (publisher != other.publisher) return false
-        if (isbn != other.isbn) return false
-        if (description != other.description) return false
-        if (tableRank != other.tableRank) return false
-
-        return true
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readInt()
+        title = parcel.readString()
+        page = parcel.readInt()
+        author = parcel.readString()
+        progress = parcel.readInt()
+        photo = parcel.readString()
+        publisher = parcel.readString()
+        isbn = parcel.readString()
+        description = parcel.readString()
+        tableRank = parcel.readInt()
+        startTime = parcel.readString().toDate()
+        endTime = parcel.readString().toDate()
     }
 
-    override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + (title?.hashCode() ?: 0)
-        result = 31 * result + page
-        result = 31 * result + (author?.hashCode() ?: 0)
-        result = 31 * result + progress
-        result = 31 * result + (startTime?.hashCode() ?: 0)
-        result = 31 * result + (endTime?.hashCode() ?: 0)
-        result = 31 * result + (photo?.hashCode() ?: 0)
-        result = 31 * result + (publisher?.hashCode() ?: 0)
-        result = 31 * result + (isbn?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + tableRank
-        return result
+    companion object CREATOR : Parcelable.Creator<Book> {
+        override fun createFromParcel(parcel: Parcel): Book {
+            return Book(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Book?> {
+            return arrayOfNulls(size)
+        }
     }
 
-    override fun toString(): String {
-        return "Book(id=$id, title=$title, page=$page, author=$author, progress=$progress, startTime=$startTime, endTime=$endTime, photo=$photo, publisher=$publisher, isbn=$isbn, description=$description, tableRank=$tableRank)"
+    override fun describeContents(): Int = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.apply {
+            writeInt(id)
+            writeString(title)
+            writeInt(page)
+            writeString(author)
+            writeInt(progress)
+            writeString(photo)
+            writeString(publisher)
+            writeString(isbn)
+            writeString(description)
+            writeInt(tableRank)
+            writeString(startTime.toDateString())
+            writeString(endTime.toDateString())
+        }
     }
 }

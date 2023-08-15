@@ -14,10 +14,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.baymax104.bookmanager20compose.R
+import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
 import com.baymax104.bookmanager20compose.ui.components.IndexTransition
 import com.baymax104.bookmanager20compose.ui.components.TopBar
+import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.blankj.utilcode.util.ToastUtils
@@ -42,16 +44,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun IndexScreen(
     navigator: DestinationsNavigator,
-    resultRecipient: ResultRecipient<ScanScreenDestination, String>
+    scanRecipient: ResultRecipient<ScanScreenDestination, String>,
+    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    resultRecipient.onNavResult {
+    scanRecipient.onNavResult {
         when (it) {
-            is NavResult.Canceled -> {
-                ToastUtils.showShort("取消")
-            }
+            is NavResult.Canceled -> {}
             is NavResult.Value -> {
                 ToastUtils.showShort(it.value)
             }
@@ -65,6 +66,7 @@ fun IndexScreen(
     Drawer(drawerState) {
         IndexContent(
             navigator = navigator,
+            manualAddRecipient = manualAddRecipient,
             onLeftNavClick = {
                 scope.launch { drawerState.open() }
             },
@@ -88,7 +90,8 @@ fun IndexScreen(
 private fun IndexContent(
     onLeftNavClick: () -> Unit,
     onActionClick: () -> Unit,
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
 ) {
     val pagerState = rememberPagerState()
     Scaffold(
@@ -99,11 +102,10 @@ private fun IndexContent(
             pageCount = 2,
             modifier = Modifier.padding(paddingValues),
             state = pagerState,
-            key = { indexPages[it].key },
-            userScrollEnabled = false
+            key = { indexPages[it].key }
         ) {
             when (it) {
-                0 -> ProgressScreen(navigator)
+                0 -> ProgressScreen(navigator, manualAddRecipient)
                 1 -> FinishScreen()
             }
         }
@@ -129,6 +131,10 @@ val indexPages = listOf(
 @Composable
 fun Preview() {
     BookManagerTheme {
-        IndexScreen(EmptyDestinationsNavigator, EmptyResultRecipient())
+        IndexScreen(
+            EmptyDestinationsNavigator,
+            EmptyResultRecipient(),
+            EmptyResultRecipient()
+        )
     }
 }

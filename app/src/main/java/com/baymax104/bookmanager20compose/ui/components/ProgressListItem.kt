@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,23 +48,23 @@ fun LazyItemScope.ProgressItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp)
+            .height(100.dp)
             .animateItemPlacement(),
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(20.dp),
         color = Color.White,
         shadowElevation = 5.dp,
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = book.title ?: "test",
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentSize(),
+                modifier = Modifier.weight(1f),
                 fontSize = 16.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelMedium
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -81,7 +81,7 @@ fun LazyItemScope.ProgressItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = book.startTime.toDateString() ?: "",
+                    text = book.startTime.toDateString(),
                     fontFamily = BookManagerFont,
                     fontWeight = FontWeight.Normal,
                     fontSize = 13.sp,

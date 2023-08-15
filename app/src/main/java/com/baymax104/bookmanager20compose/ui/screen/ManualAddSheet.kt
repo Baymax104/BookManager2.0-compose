@@ -1,9 +1,9 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,8 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import coil.compose.AsyncImage
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.base.rememberApplicationViewModel
-import com.baymax104.bookmanager20compose.request.ProgressRequester
+import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.ui.components.SelectionHeader
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.util.ImageUtil
@@ -51,8 +50,8 @@ import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.UriUtils
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 import kotlinx.coroutines.launch
 import java.io.File
@@ -67,22 +66,35 @@ import java.io.File
 @Destination(style = DestinationStyleBottomSheet::class)
 @Composable
 fun ManualAddSheet(
-    navigator: DestinationsNavigator
+    navigator: ResultBackNavigator<Book>
 ) {
-    val requester: ProgressRequester = rememberApplicationViewModel()
-
-    val title = remember { mutableStateOf("") }
-    val author = remember { mutableStateOf("") }
-    val page = remember { mutableStateOf("") }
+    val titleState = remember { mutableStateOf("") }
+    val authorState = remember { mutableStateOf("") }
+    val pageState = remember { mutableStateOf("") }
     ManualAddSheetContent(
-        titleState = title,
-        authorState = author,
-        pageState = page,
+        titleState = titleState,
+        authorState = authorState,
+        pageState = pageState,
         onConfirm = {
-
+            if (!pageState.value.isDigitsOnly()) {
+                ToastUtils.showShort("页数格式错误")
+            } else {
+                val pageValue =
+                    pageState.value.takeIf { it.isNotEmpty() && it.isDigitsOnly() }?.toInt() ?: 0
+                if (pageValue <= 1) {
+                    ToastUtils.showShort("页数必须大于1")
+                } else {
+                    val book = Book().apply {
+                        title = titleState.value.takeIf { it.isNotEmpty() } ?: "未填写"
+                        author = authorState.value.takeIf { it.isNotEmpty() } ?: "佚名"
+                        page = pageValue
+                    }
+                    navigator.navigateBack(book)
+                }
+            }
         },
         onCancel = {
-            navigator.navigateUp()
+            navigator.navigateBack()
         }
     )
 }
@@ -101,13 +113,15 @@ private fun ManualAddSheetContent(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {
-        scope.launch {
-            val file = File(camera.photoFilePath)
-            val dest = ImageUtil.createFile()
-            val compressed = ImageUtil.compress(context, file, dest)
-            with(camera) {
-                photoFilePath = compressed.absolutePath
-                isShow = true
+        if (it.resultCode == RESULT_OK) {
+            scope.launch {
+                val file = File(camera.photoFilePath)
+                val dest = ImageUtil.createFile()
+                val compressed = ImageUtil.compress(context, file, dest)
+                with(camera) {
+                    photoFilePath = compressed.absolutePath
+                    isShow = true
+                }
             }
         }
     }
@@ -121,12 +135,7 @@ private fun ManualAddSheetContent(
             onConfirm = onConfirm,
             onCancel = onCancel
         )
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Brush.linearGradient(listOf(Color(0xff43cbff), Color(0xff9708cc))))
-        )
+        Divider(color = MaterialTheme.colorScheme.primary)
         CameraCard(
             modifier = Modifier
                 .size(width = 130.dp, height = 180.dp)
@@ -241,6 +250,6 @@ class CameraState {
 @Composable
 fun PreviewManualSheet() {
     BookManagerTheme {
-        ManualAddSheet(navigator = EmptyDestinationsNavigator)
+        ManualAddSheet(navigator = EmptyResultBackNavigator())
     }
 }

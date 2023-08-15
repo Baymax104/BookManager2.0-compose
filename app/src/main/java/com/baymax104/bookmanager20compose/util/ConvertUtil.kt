@@ -22,7 +22,18 @@ fun Date?.toDateString(detail: Boolean = false) =
     this?.let {
         val formatter = if (detail) DateDetailFormatter else DateFormatter
         formatter.format(this)
+    } ?: ""
+
+fun String?.toDate(detail: Boolean = false): Date? {
+    return this?.let {
+        val formatter = if (detail) DateDetailFormatter else DateFormatter
+        try {
+            formatter.parse(this)
+        } catch (e: Exception) {
+            null
+        }
     }
+}
 
 // ================================= JSON Convertor ================================================
 
@@ -52,12 +63,10 @@ object PageSerializer : KSerializer<Int> {
 class RoomConverter {
 
     @TypeConverter
-    fun convertDateToString(date: Date?): String? =
-        date?.let { DateFormatter.format(it) }
+    fun convertDateToString(date: Date?): String = date.toDateString()
 
     @TypeConverter
-    fun convertStringToDate(dateString: String?): Date? =
-        dateString?.let { DateFormatter.parse(it) }
+    fun convertStringToDate(dateString: String?): Date? = dateString.toDate()
 }
 
 
