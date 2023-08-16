@@ -3,8 +3,8 @@ package com.baymax104.bookmanager20compose.repo.web
 import android.util.Log
 import com.baymax104.bookmanager20compose.repo.API_KEY
 import com.baymax104.bookmanager20compose.repo.BASE_URL
+import com.baymax104.bookmanager20compose.util.JsonCoder
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -25,11 +25,11 @@ object WebService {
 
         val logger = HttpLoggingInterceptor {
             Log.i("BookManager-log-web", it)
-        }.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        }.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val apiKeyFilter = Interceptor {
             val url = it.request().url.newBuilder()
-                .addQueryParameter("apikey", API_KEY)
+                .addQueryParameter("uKey", API_KEY)
                 .build()
             val request = it.request()
                 .newBuilder()
@@ -49,7 +49,7 @@ object WebService {
 
         retrofit = Retrofit.Builder()
             .client(client)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(JsonCoder.asConverterFactory("application/json".toMediaType()))
             .baseUrl(BASE_URL)
             .build()
     }

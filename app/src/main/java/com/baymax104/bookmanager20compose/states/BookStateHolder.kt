@@ -20,6 +20,7 @@ class BookStateHolder(
 ) : ViewModel() {
 
     val bookList: SnapshotStateList<Book> = mutableStateListOf()
+
     init {
         viewModelScope.launch {
             bookList.addAll(repo.queryAllProgressBook())

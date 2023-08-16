@@ -1,11 +1,13 @@
 package com.baymax104.bookmanager20compose.repo.database
 
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.entity.History
 import com.baymax104.bookmanager20compose.util.RoomConverter
+import com.blankj.utilcode.util.Utils
 
 /**
  * Room数据库
@@ -34,7 +36,16 @@ abstract class LocalDatabase : RoomDatabase() {
 
 }
 
-lateinit var Database: LocalDatabase
+val Database: LocalDatabase by lazy {
+    Room
+        .databaseBuilder(
+            Utils.getApp(),
+            LocalDatabase::class.java,
+            LocalDatabase.DatabaseName
+        )
+        .fallbackToDestructiveMigration()
+        .build()
+}
 
 /**
  * 创建数据库Mapper实例

@@ -21,10 +21,7 @@ object Repository {
 
     suspend fun requestBook(isbn: String) = withContext(Dispatchers.IO) {
         val response = bookService.requestBook(isbn)
-        when (response.errcode) {
-            0 -> response.data
-            else -> null
-        }
+        response.data
     }
 
     suspend fun queryAllProgressBook() = withContext(Dispatchers.IO) {

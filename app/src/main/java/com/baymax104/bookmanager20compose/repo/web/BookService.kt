@@ -11,6 +11,6 @@ import retrofit2.http.Query
  */
 interface BookService {
 
-    @GET
+    @GET("/v1/book/isbn")
     suspend fun requestBook(@Query("isbn") isbn: String): Response<Book>
 }

@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
 import com.baymax104.bookmanager20compose.entity.Book
+import com.baymax104.bookmanager20compose.states.BookStateHolder
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
 import com.baymax104.bookmanager20compose.ui.components.IndexTransition
@@ -49,12 +51,21 @@ fun IndexScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val stateHolder: BookStateHolder = viewModel()
 
     scanRecipient.onNavResult {
         when (it) {
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
-                ToastUtils.showShort(it.value)
+                scope.launch {
+                    val book = stateHolder.requestBook(it.value)
+                    if (book != null) {
+                        // TODO 展示
+                        ToastUtils.showShort("展示")
+                    } else {
+                        ToastUtils.showShort("请求失败")
+                    }
+                }
             }
         }
     }

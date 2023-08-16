@@ -10,5 +10,5 @@ import kotlinx.serialization.Serializable
 data class Response<E>(
     val errcode: Int,
     val errmsg: String,
-    val data: E
+    val data: E? = null
 )
