@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,6 +37,7 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.result.EmptyResultRecipient
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProgressScreen(
@@ -42,19 +45,32 @@ fun ProgressScreen(
     manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
 ) {
     val stateHolder: BookStateHolder = viewModel()
-    val scope = rememberCoroutineScope()
     val bookListState = remember { stateHolder.bookList }
+    val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     manualAddRecipient.onNavResult {
         when (it) {
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
-                stateHolder.insertBook(it.value)
+                scope.launch {
+                    stateHolder.insertBook(it.value)
+                    lazyListState.animateScrollToItem(bookListState.lastIndex)
+                }
             }
         }
     }
     ProgressContent(
         books = bookListState,
-        navigator = navigator
+        lazyListState = lazyListState,
+        scanClick = {
+            requestPermission(Manifest.permission.CAMERA) {
+                granted { navigator.navigate(ScanScreenDestination) }
+                denied { ToastUtils.showShort("权限申请失败，请到权限中心开启权限") }
+            }
+        },
+        inputClick = {
+            navigator.navigate(ManualAddSheetDestination)
+        }
     )
 }
 
@@ -64,7 +80,9 @@ fun ProgressScreen(
 @Composable
 private fun ProgressContent(
     books: List<Book>,
-    navigator: DestinationsNavigator,
+    lazyListState: LazyListState,
+    scanClick: () -> Unit,
+    inputClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -72,7 +90,10 @@ private fun ProgressContent(
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
-        ProgressListContent(books = books)
+        ProgressListContent(
+            lazyListState = lazyListState,
+            books = books
+        )
         FloatingMenu(
             size = 60.dp,
             icon = R.drawable.add,
@@ -80,15 +101,8 @@ private fun ProgressContent(
                 .align(Alignment.BottomEnd)
                 .padding(end = 20.dp, bottom = 25.dp),
         ) {
-            item(icon = R.drawable.scan) {
-                requestPermission(Manifest.permission.CAMERA) {
-                    granted { navigator.navigate(ScanScreenDestination) }
-                    denied { ToastUtils.showShort("权限申请失败，请到权限中心开启权限") }
-                }
-            }
-            item(icon = R.drawable.input) {
-                navigator.navigate(ManualAddSheetDestination)
-            }
+            item(icon = R.drawable.scan, onClick = scanClick)
+            item(icon = R.drawable.input, onClick = inputClick)
         }
     }
 }
@@ -97,14 +111,18 @@ private fun ProgressContent(
  * 进度列表页
  */
 @Composable
-private fun ProgressListContent(books: List<Book>) {
+private fun ProgressListContent(
+    lazyListState: LazyListState,
+    books: List<Book>
+) {
     if (books.isEmpty()) {
         Image(painter = painterResource(id = R.drawable.no_data), contentDescription = null)
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            state = lazyListState
         ) {
             items(
                 items = books,

@@ -1,5 +1,6 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
+import androidx.camera.core.CameraSelector
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,9 +24,11 @@ import com.baymax104.bookmanager20compose.ui.components.ScanTransition
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.DecodeHintType
+import com.google.zxing.Result
+import com.king.camera.scan.BaseCameraScan
+import com.king.camera.scan.config.CameraConfigFactory
+import com.king.view.viewfinderview.ViewfinderView
 import com.king.zxing.DecodeConfig
-import com.king.zxing.DefaultCameraScan
-import com.king.zxing.ViewfinderView
 import com.king.zxing.analyze.MultiFormatAnalyzer
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -45,8 +48,8 @@ fun ScanScreen(
     val context = LocalContext.current as FragmentActivity
     val preview = PreviewView(context)
     val scanner = remember {
-        CameraScanner(context, preview).apply {
-            setOnResultCallback { resultNavigator.navigateBack(result = it) }
+        CameraScanner(context, preview) {
+            resultNavigator.navigateBack(result = it)
         }
     }
     DisposableEffect(scanner) {
@@ -95,34 +98,31 @@ fun ScanScreen(
  */
 class CameraScanner(
     context: FragmentActivity,
-    previewView: PreviewView
+    previewView: PreviewView,
+    resultCallback: (String) -> Unit
 ) {
-    private val scanner = DefaultCameraScan(context, previewView)
+    private val scanner = BaseCameraScan<Result>(context, previewView)
 
     private val isbnReg =
         Regex("^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}\$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}\$|97[89][0-9]{10}\$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}\$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]\$")
 
     init {
-        val config = DecodeConfig().apply {
+        val analyzer = DecodeConfig().apply {
             hints = mapOf(
                 DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.EAN_13),
                 DecodeHintType.TRY_HARDER to BarcodeFormat.EAN_13,
                 DecodeHintType.CHARACTER_SET to "UTF-8"
             )
+        }.let {
+            MultiFormatAnalyzer(it)
         }
+        val config = CameraConfigFactory.createDefaultCameraConfig(context, CameraSelector.LENS_FACING_BACK)
         scanner.apply {
-            setAnalyzer(MultiFormatAnalyzer(config))
-            setNeedAutoZoom(true)
-            setDarkLightLux(35f)
-            setBrightLightLux(40f)
-            setOnScanResultCallback { true }
-        }
-    }
-
-    fun setOnResultCallback(callback: (String) -> Unit) {
-        scanner.setOnScanResultCallback { result ->
-            result.text.takeIf { isbnReg.matches(it) }?.let { callback(it) }
-            true
+            setAnalyzer(analyzer)
+            setCameraConfig(config)
+            setOnScanResultCallback { res ->
+                res.result.text.takeIf { isbnReg.matches(it) }?.let { resultCallback(it) }
+            }
         }
     }
 

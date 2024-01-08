@@ -4,6 +4,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerScope
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,9 +40,7 @@ import kotlinx.coroutines.launch
 /**
  * 主页
  */
-@OptIn(
-    ExperimentalMaterial3Api::class,
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
 @Destination(style = IndexTransition::class)
 @Composable
@@ -76,15 +76,22 @@ fun IndexScreen(
     }
     Drawer(drawerState) {
         IndexContent(
-            navigator = navigator,
-            manualAddRecipient = manualAddRecipient,
             onLeftNavClick = {
-                scope.launch { drawerState.open() }
+                scope.launch {
+                    drawerState.open()
+                }
             },
             onActionClick = {
                 ToastUtils.showShort("Action")
+            },
+            pagerState = rememberPagerState { 2 },
+            pages = listOf(IndexPage.Progress, IndexPage.Finish)
+        ) {
+            when (it) {
+                0 -> ProgressScreen(navigator, manualAddRecipient)
+                1 -> FinishScreen()
             }
-        )
+        }
     }
 }
 
@@ -101,25 +108,20 @@ fun IndexScreen(
 private fun IndexContent(
     onLeftNavClick: () -> Unit,
     onActionClick: () -> Unit,
-    navigator: DestinationsNavigator,
-    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
+    pagerState: PagerState,
+    pages: List<IndexPage>,
+    pageContent: @Composable (PagerScope.(Int) -> Unit)
 ) {
-    val pagerState = rememberPagerState()
     Scaffold(
         topBar = { TopBar(onLeftNavClick, onActionClick) },
-        bottomBar = { BottomBar(pagerState = pagerState, indexPages = indexPages) },
+        bottomBar = { BottomBar(pagerState = pagerState, indexPages = pages) },
     ) { paddingValues ->
         HorizontalPager(
-            pageCount = 2,
             modifier = Modifier.padding(paddingValues),
             state = pagerState,
-            key = { indexPages[it].key }
-        ) {
-            when (it) {
-                0 -> ProgressScreen(navigator, manualAddRecipient)
-                1 -> FinishScreen()
-            }
-        }
+            key = { pages[it].key },
+            pageContent = pageContent
+        )
     }
 }
 
@@ -131,12 +133,6 @@ sealed class IndexPage(
     object Progress : IndexPage("progress", "进度", R.drawable.progress)
     object Finish: IndexPage("finish", "读过", R.drawable.finish)
 }
-
-val indexPages = listOf(
-    IndexPage.Progress,
-    IndexPage.Finish
-)
-
 
 @Preview
 @Composable

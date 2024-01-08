@@ -36,10 +36,5 @@ inline fun requestPermission(permission: String, block: PermissionCallback.() ->
         callback.granted()
     } else {
         PermissionUtils.permission(permission).callback(callback).request()
-        if (PermissionUtils.isGranted(permission)) {
-            callback.granted()
-        } else {
-            callback.denied()
-        }
     }
 }

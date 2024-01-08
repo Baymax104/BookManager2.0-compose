@@ -1,29 +1,30 @@
 [versions]
 androidx-navigation-navigation-safe-args-gradle-plugin2 = "2.5.3"
-kotlin = "1.8.0"
+kotlin = "1.9.21"
 
-lifecycle-runtime-ktx = "2.6.1"
+lifecycle-runtime-ktx = "2.6.2"
 activity-compose = "1.7.2"
 activity-ktx = "1.7.2"
+core-ktx = "1.12.0"
 appcompat = "1.6.1"
 
 junit = "4.13.2"
 junit-android-ext = "1.1.5"
 espresso-core = "3.5.1"
 
-androidx-navigation = "2.6.0"
-compose-destinations = "1.9.42-beta"
-accompanist = "0.30.1"
-material = "1.4.3"
-ui-test-manifest = "1.4.3"
-ui-tooling = "1.4.3"
-ui-test-junit4 = "1.4.3"
+androidx-navigation = "2.7.6"
+compose-destinations = "1.9.57"
+accompanist = "0.32.0"
+material = "1.5.0"
+ui-test-manifest = "1.5.4"
+ui-tooling = "1.5.4"
+ui-test-junit4 = "1.5.4"
 material3 = "1.0.1"
-ui-tooling-preview = "1.4.3"
-ui-graphics = "1.4.3"
-ui = "1.4.3"
+ui-tooling-preview = "1.5.4"
+ui-graphics = "1.5.4"
+ui = "1.5.4"
 
-coil = "2.4.0"
+coil = "2.5.0"
 compressor = "3.0.1"
 
 utilcodex = "1.31.1"
@@ -31,19 +32,21 @@ utilcodex = "1.31.1"
 reorderable = "0.9.6"
 
 retrofit = "2.9.0"
-okhttp = "4.11.0"
-logging-interceptor = "4.10.0"
+okhttp = "4.12.0"
+logging-interceptor = "4.12.0"
 
 room = "2.5.2"
 room-complier = "2.5.1"
 
-zxing-lite = "2.4.0"
+zxing-lite = "3.1.0"
+camera-scan = "1.1.0"
+viewfinderview = "1.1.0"
 
-kotlinx-serialization-json = "1.5.1"
+kotlinx-serialization-json = "1.6.2"
 retrofit-kotlinx-serialization-convertor = "1.0.0"
 
 [libraries]
-androidx-material = { module = "androidx.compose.material:material", version = "material" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-navigation-navigation-safe-args-gradle-plugin2 = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation-navigation-safe-args-gradle-plugin2" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "ui-test-manifest" }
@@ -52,7 +55,7 @@ androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", versi
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui-tooling-preview" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "ui-graphics" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
-core-ktx = { module = "androidx.core:core-ktx", version.ref = "kotlin" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -88,6 +91,8 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-co
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }
 zxing-lite = { module = "com.github.jenly1314:zxing-lite", version.ref = "zxing-lite" }
+camera-scan = { module = "com.github.jenly1314:camera-scan", version.ref = "camera-scan" }
+viewfinderview = { module = "com.github.jenly1314:viewfinderview", version.ref = "viewfinderview" }
 compressor = { module = "id.zelory:compressor", version.ref = "compressor" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }

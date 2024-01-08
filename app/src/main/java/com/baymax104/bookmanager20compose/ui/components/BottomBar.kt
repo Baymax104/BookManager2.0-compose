@@ -14,21 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.baymax104.bookmanager20compose.ui.screen.IndexPage
-import com.baymax104.bookmanager20compose.ui.screen.indexPages
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.ContainerColor
+import com.baymax104.bookmanager20compose.ui.theme.IndicatorColor
 import kotlinx.coroutines.launch
 
 /**
  * 底部导航栏
  * @author John
  */
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomBar(
@@ -72,19 +70,19 @@ private fun RowScope.NavItem(
             Icon(
                 painter = painterResource(id = indexPage.icon),
                 contentDescription = null,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(30.dp)
             )
         },
         onClick = onClick,
         colors = NavigationBarItemDefaults.colors(
             selectedTextColor = MaterialTheme.colorScheme.primary,
             selectedIconColor = MaterialTheme.colorScheme.primary,
-            indicatorColor = Color(0xFFD5EBFF)
+            indicatorColor = IndicatorColor
         ),
         label = {
             Text(
                 text = indexPage.label,
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
             )
         },
         alwaysShowLabel = false,
@@ -95,8 +93,9 @@ private fun RowScope.NavItem(
 @Preview
 @Composable
 fun PreviewNav() {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
+    val pages = listOf(IndexPage.Progress, IndexPage.Finish)
     BookManagerTheme {
-        BottomBar(pagerState = pagerState, indexPages = indexPages)
+        BottomBar(pagerState = pagerState, indexPages = pages)
     }
 }

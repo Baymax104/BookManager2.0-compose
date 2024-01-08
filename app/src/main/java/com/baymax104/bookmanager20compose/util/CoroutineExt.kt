@@ -11,16 +11,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 
-lateinit var MainScope: CoroutineScope
-
-lateinit var MainScopeContext: CoroutineContext
-
-fun mainLaunch(
-    context: CoroutineContext = EmptyCoroutineContext,
-    start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> Unit
-) = MainScope.launch(context, start, block)
-
 fun ViewModel.viewModelLaunch(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,

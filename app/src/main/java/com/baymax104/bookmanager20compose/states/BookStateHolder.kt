@@ -31,15 +31,13 @@ class BookStateHolder(
         return repo.requestBook(isbn)
     }
 
-    fun insertBook(book: Book) {
-        viewModelScope.launch {
-            book.apply {
-                startTime = Date()
-                tableRank = bookList.size
-            }
-            val insertedBook = repo.insertProgressBook(book)
-            bookList.add(insertedBook)
+    suspend fun insertBook(book: Book) {
+        book.apply {
+            startTime = Date()
+            tableRank = bookList.size
         }
+        val insertedBook = repo.insertProgressBook(book)
+        bookList.add(insertedBook)
     }
 
 

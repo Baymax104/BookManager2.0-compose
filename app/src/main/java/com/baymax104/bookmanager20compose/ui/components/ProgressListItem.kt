@@ -33,6 +33,7 @@ import com.baymax104.bookmanager20compose.entity.Book
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerFont
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.MainColor
+import com.baymax104.bookmanager20compose.ui.theme.MainColorShallow
 import com.baymax104.bookmanager20compose.util.toDateString
 
 /**
@@ -128,7 +129,7 @@ private fun ProgressBar(
     ) {
         val strokeWidth = size.height
         val ratio = (progress * 1.0 / total).toFloat()
-        drawIndicator(0f, 1f, Color(0xffc5e2ff), strokeWidth)
+        drawIndicator(0f, 1f, MainColorShallow, strokeWidth)
         drawIndicator(0f, ratio, MainColor, strokeWidth)
     }
 }

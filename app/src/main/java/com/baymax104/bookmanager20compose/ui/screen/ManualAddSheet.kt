@@ -156,29 +156,33 @@ private fun ManualAddSheetContent(
         InfoField(
             label = "书名",
             state = titleState,
-            onValueChange = { titleState.value = it },
             modifier = Modifier
                 .padding(bottom = 3.dp)
                 .height(60.dp)
-        )
+        ) {
+            titleState.value = it
+        }
         InfoField(
             label = "作者",
             state = authorState,
-            onValueChange = { authorState.value = it },
             modifier = Modifier
                 .padding(vertical = 3.dp)
                 .height(60.dp)
-        )
+        ) {
+            authorState.value = it
+        }
         InfoField(
             label = "总页数",
             state = pageState,
-            onValueChange = { pageState.value = it },
             modifier = Modifier
                 .padding(top = 3.dp, bottom = 20.dp)
                 .height(60.dp),
             inputType = KeyboardType.Number,
-            isError = !pageState.value.isDigitsOnly()
-        )
+            isError = !pageState.value.isDigitsOnly() ||
+                    (pageState.value.isNotEmpty() && pageState.value.toInt() <= 1),
+        ) {
+            pageState.value = it
+        }
     }
 }
 
@@ -187,10 +191,10 @@ private fun ManualAddSheetContent(
 private fun InfoField(
     label: String,
     state: MutableState<String>,
-    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     inputType: KeyboardType = KeyboardType.Text,
-    isError: Boolean = false
+    isError: Boolean = false,
+    onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
         value = state.value,

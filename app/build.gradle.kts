@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.baymax104.bookmanager20compose"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.baymax104.bookmanager20compose"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -65,7 +65,7 @@ kotlin {
 
 dependencies {
     implementation(libs.core.ktx)
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.21"))
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.appcompat)
     implementation(libs.activity.compose)
@@ -105,4 +105,6 @@ dependencies {
     implementation(libs.compressor)
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.camera.scan)
+    implementation(libs.viewfinderview)
 }
