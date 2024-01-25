@@ -107,4 +107,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.camera.scan)
     implementation(libs.viewfinderview)
+    implementation(libs.mapstruct)
+    ksp(libs.mapstruct.processor)
 }

@@ -1,11 +1,9 @@
 package com.baymax104.bookmanager20compose.ui.screen
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerScope
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,14 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.states.BookStateHolder
+import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
 import com.baymax104.bookmanager20compose.ui.components.IndexTransition
 import com.baymax104.bookmanager20compose.ui.components.TopBar
-import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
+import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
+//import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
+//import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.blankj.utilcode.util.ToastUtils
 import com.ramcosta.composedestinations.annotation.Destination
@@ -47,18 +47,18 @@ import kotlinx.coroutines.launch
 fun IndexScreen(
     navigator: DestinationsNavigator,
     scanRecipient: ResultRecipient<ScanScreenDestination, String>,
-    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, BookDto>
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val stateHolder: BookStateHolder = viewModel()
+    val progressBookListState: ProgressBookListState = viewModel()
 
     scanRecipient.onNavResult {
         when (it) {
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
                 scope.launch {
-                    val book = stateHolder.requestBook(it.value)
+                    val book = progressBookListState.requestBook(it.value)
                     if (book != null) {
                         // TODO 展示
                         ToastUtils.showShort("展示")
@@ -67,11 +67,6 @@ fun IndexScreen(
                     }
                 }
             }
-        }
-    }
-    if (drawerState.isOpen) {
-        BackHandler {
-            scope.launch { drawerState.close() }
         }
     }
     Drawer(drawerState) {
@@ -84,7 +79,6 @@ fun IndexScreen(
             onActionClick = {
                 ToastUtils.showShort("Action")
             },
-            pagerState = rememberPagerState { 2 },
             pages = listOf(IndexPage.Progress, IndexPage.Finish)
         ) {
             when (it) {
@@ -108,10 +102,10 @@ fun IndexScreen(
 private fun IndexContent(
     onLeftNavClick: () -> Unit,
     onActionClick: () -> Unit,
-    pagerState: PagerState,
     pages: List<IndexPage>,
     pageContent: @Composable (PagerScope.(Int) -> Unit)
 ) {
+    val pagerState = rememberPagerState { pages.size }
     Scaffold(
         topBar = { TopBar(onLeftNavClick, onActionClick) },
         bottomBar = { BottomBar(pagerState = pagerState, indexPages = pages) },

@@ -29,21 +29,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.baymax104.bookmanager20compose.entity.Book
+import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerFont
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.MainColor
 import com.baymax104.bookmanager20compose.ui.theme.MainColorShallow
-import com.baymax104.bookmanager20compose.util.toDateString
 
 /**
  * 主页列表项
- * @param book Book实例
+ * @param bookView Book实例
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.ProgressItem(
-    book: Book = Book(),
+    bookView: ProgressBookView,
     onClick: () -> Unit = {}
 ) {
     Surface(
@@ -61,7 +60,7 @@ fun LazyItemScope.ProgressItem(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = book.title ?: "test",
+                text = bookView.title,
                 modifier = Modifier.weight(1f),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
@@ -75,14 +74,14 @@ fun LazyItemScope.ProgressItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = book.author ?: "",
+                    text = bookView.author,
                     fontFamily = BookManagerFont,
                     fontWeight = FontWeight.Normal,
                     fontSize = 13.sp,
                     color = Color.Gray
                 )
                 Text(
-                    text = book.startTime.toDateString(),
+                    text = bookView.startTime,
                     fontFamily = BookManagerFont,
                     fontWeight = FontWeight.Normal,
                     fontSize = 13.sp,
@@ -96,15 +95,15 @@ fun LazyItemScope.ProgressItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ProgressBar(
-                    progress = book.progress,
-                    total = book.page,
+                    progress = bookView.progress,
+                    total = bookView.page,
                     modifier = Modifier
                         .weight(1f)
                         .height(12.dp)
                         .clip(RoundedCornerShape(100))
                         .padding(end = 15.dp)
                 )
-                val ratio = with(book) { (progress * 1.0 / page * 100).toInt() }
+                val ratio = with(bookView) { (progress * 1.0 / page * 100).toInt() }
                 Text(
                     text = "$ratio%",
                     textAlign = TextAlign.Center,
@@ -163,8 +162,7 @@ private fun DrawScope.drawIndicator(
 fun PreviewProgressItem() {
     BookManagerTheme {
         LazyColumn {
-            item { ProgressItem() }
+            item { ProgressItem(ProgressBookView()) }
         }
-//        ProgressBar(progress = 50, 100)
     }
 }

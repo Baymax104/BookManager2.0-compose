@@ -1,4 +1,4 @@
-package com.baymax104.bookmanager20compose.entity.dto
+package com.baymax104.bookmanager20compose.bean.dto
 
 import kotlinx.serialization.Serializable
 

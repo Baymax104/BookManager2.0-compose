@@ -4,8 +4,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.entity.History
+import com.baymax104.bookmanager20compose.bean.entity.BookEntity
+import com.baymax104.bookmanager20compose.bean.entity.HistoryEntity
 import com.baymax104.bookmanager20compose.util.RoomConverter
 import com.blankj.utilcode.util.Utils
 
@@ -14,14 +14,23 @@ import com.blankj.utilcode.util.Utils
  * @author John
  */
 @TypeConverters(RoomConverter::class)
-@Database(entities = [Book::class, History::class], version = 3, exportSchema = false)
+@Database(entities = [BookEntity::class, HistoryEntity::class], version = 4, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
 
     companion object {
         const val DatabaseName = "BookManager"
+
+        val Database: LocalDatabase = Room
+            .databaseBuilder(
+                Utils.getApp(),
+                LocalDatabase::class.java,
+                DatabaseName
+            )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
-    abstract fun bookMapper(): BookMapper
+    abstract fun bookDao(): BookDao
 
     inline fun <reified T> create(): T {
         val methods = javaClass.declaredMethods
@@ -52,4 +61,4 @@ val Database: LocalDatabase by lazy {
  * @param T Mapper类型
  * @return Mapper实例
  */
-inline fun <reified T> createMapper(): Lazy<T> = lazy { Database.create() }
+inline fun <reified T> dao(): Lazy<T> = lazy { LocalDatabase.Database.create() }

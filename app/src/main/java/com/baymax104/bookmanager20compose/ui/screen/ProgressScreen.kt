@@ -23,11 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.states.BookStateHolder
+import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
+import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
-import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
+import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.util.requestPermission
@@ -42,11 +43,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProgressScreen(
     navigator: DestinationsNavigator,
-    manualAddRecipient: ResultRecipient<ManualAddSheetDestination, Book>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, BookDto>
 ) {
-    val stateHolder: BookStateHolder = viewModel()
+    val stateHolder: ProgressBookListState = viewModel()
     val bookListState = remember { stateHolder.bookList }
-    val lazyListState = rememberLazyListState()
+    val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     manualAddRecipient.onNavResult {
         when (it) {
@@ -54,14 +55,14 @@ fun ProgressScreen(
             is NavResult.Value -> {
                 scope.launch {
                     stateHolder.insertBook(it.value)
-                    lazyListState.animateScrollToItem(bookListState.lastIndex)
+                    listState.animateScrollToItem(bookListState.lastIndex)
                 }
             }
         }
     }
     ProgressContent(
         books = bookListState,
-        lazyListState = lazyListState,
+        lazyListState = listState,
         scanClick = {
             requestPermission(Manifest.permission.CAMERA) {
                 granted { navigator.navigate(ScanScreenDestination) }
@@ -69,7 +70,7 @@ fun ProgressScreen(
             }
         },
         inputClick = {
-            navigator.navigate(ManualAddSheetDestination)
+            navigator.navigate(ManualAddScreenDestination)
         }
     )
 }
@@ -79,7 +80,7 @@ fun ProgressScreen(
  */
 @Composable
 private fun ProgressContent(
-    books: List<Book>,
+    books: List<ProgressBookView>,
     lazyListState: LazyListState,
     scanClick: () -> Unit,
     inputClick: () -> Unit
@@ -113,7 +114,7 @@ private fun ProgressContent(
 @Composable
 private fun ProgressListContent(
     lazyListState: LazyListState,
-    books: List<Book>
+    books: List<ProgressBookView>
 ) {
     if (books.isEmpty()) {
         Image(painter = painterResource(id = R.drawable.no_data), contentDescription = null)

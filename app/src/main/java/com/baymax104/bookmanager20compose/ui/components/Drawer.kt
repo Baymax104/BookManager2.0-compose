@@ -1,5 +1,6 @@
 package com.baymax104.bookmanager20compose.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
@@ -43,10 +44,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Drawer(
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    drawerState: DrawerState,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    if (drawerState.isOpen) {
+        BackHandler {
+            scope.launch { drawerState.close() }
+        }
+    }
     ModalNavigationDrawer(
         drawerContent = {
             DrawerSheet {

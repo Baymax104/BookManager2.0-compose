@@ -22,12 +22,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import coil.compose.AsyncImage
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.entity.Book
+import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.states.CameraState
 import com.baymax104.bookmanager20compose.ui.components.SelectionHeader
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.util.ImageUtil
@@ -49,7 +47,6 @@ import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.UriUtils
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
@@ -62,19 +59,20 @@ import java.io.File
  * @since 2023/8/7
  */
 
-@RootNavGraph
 @Destination(style = DestinationStyleBottomSheet::class)
 @Composable
-fun ManualAddSheet(
-    navigator: ResultBackNavigator<Book>
+fun ManualAddScreen(
+    navigator: ResultBackNavigator<BookDto>
 ) {
     val titleState = remember { mutableStateOf("") }
     val authorState = remember { mutableStateOf("") }
     val pageState = remember { mutableStateOf("") }
+    val cameraState = remember { CameraState() }
     ManualAddSheetContent(
         titleState = titleState,
         authorState = authorState,
         pageState = pageState,
+        cameraState = cameraState,
         onConfirm = {
             if (!pageState.value.isDigitsOnly()) {
                 ToastUtils.showShort("页数格式错误")
@@ -84,12 +82,12 @@ fun ManualAddSheet(
                 if (pageValue <= 1) {
                     ToastUtils.showShort("页数必须大于1")
                 } else {
-                    val book = Book().apply {
+                    val bookDto = BookDto().apply {
                         title = titleState.value.takeIf { it.isNotEmpty() } ?: "未填写"
                         author = authorState.value.takeIf { it.isNotEmpty() } ?: "佚名"
                         page = pageValue
                     }
-                    navigator.navigateBack(book)
+                    navigator.navigateBack(bookDto)
                 }
             }
         },
@@ -104,28 +102,10 @@ private fun ManualAddSheetContent(
     titleState: MutableState<String>,
     authorState: MutableState<String>,
     pageState: MutableState<String>,
+    cameraState: CameraState,
     onConfirm: () -> Unit,
     onCancel: () -> Unit
 ) {
-    val camera = remember { CameraState() }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == RESULT_OK) {
-            scope.launch {
-                val file = File(camera.photoFilePath)
-                val dest = ImageUtil.createFile()
-                val compressed = ImageUtil.compress(context, file, dest)
-                with(camera) {
-                    photoFilePath = compressed.absolutePath
-                    isShow = true
-                }
-            }
-        }
-    }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -140,37 +120,22 @@ private fun ManualAddSheetContent(
             modifier = Modifier
                 .size(width = 130.dp, height = 180.dp)
                 .padding(vertical = 10.dp),
-            cameraState = camera
-        ) {
-            requestPermission(Manifest.permission.CAMERA) {
-                granted {
-                    val file = ImageUtil.createCacheFile()
-                    camera.photoFilePath = file.absolutePath
-                    val uri = UriUtils.file2Uri(file)
-                    val intent = IntentUtils.getCaptureIntent(uri)
-                    launcher.launch(intent)
-                }
-                denied { ToastUtils.showShort("权限申请失败，请到权限中心开启权限") }
-            }
-        }
+            cameraState = cameraState
+        )
         InfoField(
             label = "书名",
             state = titleState,
             modifier = Modifier
                 .padding(bottom = 3.dp)
                 .height(60.dp)
-        ) {
-            titleState.value = it
-        }
+        )
         InfoField(
             label = "作者",
             state = authorState,
             modifier = Modifier
                 .padding(vertical = 3.dp)
                 .height(60.dp)
-        ) {
-            authorState.value = it
-        }
+        )
         InfoField(
             label = "总页数",
             state = pageState,
@@ -180,9 +145,7 @@ private fun ManualAddSheetContent(
             inputType = KeyboardType.Number,
             isError = !pageState.value.isDigitsOnly() ||
                     (pageState.value.isNotEmpty() && pageState.value.toInt() <= 1),
-        ) {
-            pageState.value = it
-        }
+        )
     }
 }
 
@@ -194,7 +157,7 @@ private fun InfoField(
     modifier: Modifier = Modifier,
     inputType: KeyboardType = KeyboardType.Text,
     isError: Boolean = false,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit = { state.value = it }
 ) {
     OutlinedTextField(
         value = state.value,
@@ -215,11 +178,40 @@ private fun InfoField(
 private fun CameraCard(
     modifier: Modifier = Modifier,
     cameraState: CameraState,
-    onClick: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            scope.launch {
+                val file = File(cameraState.photoFilePath)
+                val dest = ImageUtil.createFile()
+                val compressed = ImageUtil.compress(context, file, dest)
+                cameraState.apply {
+                    photoFilePath = compressed.absolutePath
+                    isShow = true
+                }
+            }
+        }
+    }
     ElevatedCard(
-        onClick = onClick,
         modifier = modifier,
+        onClick = {
+            requestPermission(Manifest.permission.CAMERA) {
+                granted {
+                    val file = ImageUtil.createCacheFile()
+                    cameraState.photoFilePath = file.absolutePath
+                    val uri = UriUtils.file2Uri(file)
+                    val intent = IntentUtils.getCaptureIntent(uri)
+                    launcher.launch(intent)
+                }
+                denied {
+                    ToastUtils.showShort("权限申请失败，请到权限中心开启权限")
+                }
+            }
+        },
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -244,16 +236,11 @@ private fun CameraCard(
     }
 }
 
-@Stable
-class CameraState {
-    var photoFilePath by mutableStateOf("")
-    var isShow by mutableStateOf(false)
-}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewManualSheet() {
     BookManagerTheme {
-        ManualAddSheet(navigator = EmptyResultBackNavigator())
+        ManualAddScreen(navigator = EmptyResultBackNavigator())
     }
 }

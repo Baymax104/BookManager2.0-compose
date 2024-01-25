@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.baymax104.bookmanager20compose.entity.Book
+import com.baymax104.bookmanager20compose.bean.entity.BookEntity
 import java.util.Date
 
 /**
@@ -12,22 +12,22 @@ import java.util.Date
  * @author John
  */
 @Dao
-interface BookMapper {
+interface BookDao {
 
     @Insert
-    suspend fun insertProcess(book: Book): Long
+    suspend fun insertProcess(book: BookEntity): Long
 
-    @Query("select * from Book where progress < 100 order by tableRank asc")
-    fun queryAllProcess(): MutableList<Book>
+    @Query("select * from Book where progress < 100 order by rank asc")
+    fun queryAllProcess(): MutableList<BookEntity>
 
-    @Query("select * from Book where progress >= 100 order by tableRank asc")
-    suspend fun queryAllFinish(): MutableList<Book>
+    @Query("select * from Book where progress >= 100 order by rank asc")
+    suspend fun queryAllFinish(): MutableList<BookEntity>
 
     @Query("delete from Book where id in (:bookIds)")
     suspend fun deleteBooks(bookIds: List<Int>): Int
 
     @Update
-    suspend fun updateBookRank(books: List<Book>): Int
+    suspend fun updateBookRank(books: List<BookEntity>): Int
 
     @Query("update Book set progress = :progress, endTime = :endTime where id = :bookId")
     suspend fun updateBookProgress(bookId: Int, progress: Int, endTime: Date?): Int

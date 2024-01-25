@@ -1,7 +1,7 @@
 package com.baymax104.bookmanager20compose
 
-import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.entity.dto.Response
+import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.bean.dto.Response
 import com.baymax104.bookmanager20compose.util.JsonCoder
 import org.junit.Test
 
@@ -39,11 +39,12 @@ class ExampleUnitTest {
                 "isbn10":"7111213823",
                 "page":"880页",
                 "category":"工业技术",
-                "pubdate":"2007-06-01"},
-                "errmsg":"成功"
+                "pubdate":"2007-06-01"
+              },
+              "errmsg":"成功"
             }
         """.trimIndent()
-        val response = JsonCoder.decodeFromString<Response<Book>>(str)
+        val response = JsonCoder.decodeFromString<Response<BookDto>>(str)
         println(response)
     }
 }

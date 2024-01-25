@@ -1,7 +1,7 @@
 package com.baymax104.bookmanager20compose.repo.web
 
-import com.baymax104.bookmanager20compose.entity.Book
-import com.baymax104.bookmanager20compose.entity.dto.Response
+import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.bean.dto.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,5 +12,5 @@ import retrofit2.http.Query
 interface BookService {
 
     @GET("/v1/book/isbn")
-    suspend fun requestBook(@Query("isbn") isbn: String): Response<Book>
+    suspend fun requestBook(@Query("isbn") isbn: String): Response<BookDto>
 }

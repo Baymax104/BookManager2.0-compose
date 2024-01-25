@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.baymax104.bookmanager20compose.entity.History
+import com.baymax104.bookmanager20compose.bean.entity.HistoryEntity
 
 /**
  *@Description
@@ -14,17 +14,17 @@ import com.baymax104.bookmanager20compose.entity.History
  *@Version 1
  */
 @Dao
-interface HistoryMapper {
+interface HistoryDao {
 
     @Insert
-    suspend fun insertHistory(history: History): Long
+    suspend fun insertHistory(history: HistoryEntity): Long
 
     @Query("select * from History where bookId = :bookId")
-    suspend fun queryBookHistories(bookId: Int): MutableList<History>
+    suspend fun queryBookHistories(bookId: Int): MutableList<HistoryEntity>
 
     @Query("delete from History where bookId in (:bookIds)")
     suspend fun deleteBooksHistories(bookIds: List<Int>): Int
 
     @Update
-    suspend fun updateHistoryDuplicate(histories: List<History>): Int
+    suspend fun updateHistoryDuplicate(histories: List<HistoryEntity>): Int
 }

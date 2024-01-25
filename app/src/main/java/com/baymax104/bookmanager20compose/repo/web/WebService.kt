@@ -62,4 +62,4 @@ object WebService {
  * @param S 服务接口类型
  * @return 服务实例
  */
-inline fun <reified S> createService(): Lazy<S> = lazy { WebService.create() }
+inline fun <reified S> service(): Lazy<S> = lazy { WebService.create() }
