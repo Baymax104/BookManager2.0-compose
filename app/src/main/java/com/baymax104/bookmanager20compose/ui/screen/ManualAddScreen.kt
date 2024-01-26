@@ -1,4 +1,6 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.baymax104.bookmanager20compose.ui.screen
+
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -37,15 +39,15 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import coil.compose.AsyncImage
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.CameraState
 import com.baymax104.bookmanager20compose.ui.components.SelectionHeader
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.util.ImageUtil
 import com.baymax104.bookmanager20compose.util.requestPermission
 import com.blankj.utilcode.util.IntentUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.UriUtils
+import com.hjq.toast.Toaster
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
@@ -58,11 +60,10 @@ import java.io.File
  * @author John
  * @since 2023/8/7
  */
-
 @Destination(style = DestinationStyleBottomSheet::class)
 @Composable
 fun ManualAddScreen(
-    navigator: ResultBackNavigator<BookDto>
+    navigator: ResultBackNavigator<ProgressBookView>
 ) {
     val titleState = remember { mutableStateOf("") }
     val authorState = remember { mutableStateOf("") }
@@ -74,21 +75,24 @@ fun ManualAddScreen(
         pageState = pageState,
         cameraState = cameraState,
         onConfirm = {
-            if (!pageState.value.isDigitsOnly()) {
-                ToastUtils.showShort("页数格式错误")
-            } else {
+            if (pageState.value.isDigitsOnly()) {
+                val titleValue = titleState.value.takeIf { it.isNotEmpty() } ?: "未填写"
+                val authorValue = authorState.value.takeIf { it.isNotEmpty() } ?: "佚名"
                 val pageValue =
                     pageState.value.takeIf { it.isNotEmpty() && it.isDigitsOnly() }?.toInt() ?: 0
-                if (pageValue <= 1) {
-                    ToastUtils.showShort("页数必须大于1")
-                } else {
-                    val bookDto = BookDto().apply {
-                        title = titleState.value.takeIf { it.isNotEmpty() } ?: "未填写"
-                        author = authorState.value.takeIf { it.isNotEmpty() } ?: "佚名"
+                if (pageValue > 1) {
+                    ProgressBookView().apply {
+                        title = titleValue
+                        author = authorValue
                         page = pageValue
+                    }.let {
+                        navigator.navigateBack(it)
                     }
-                    navigator.navigateBack(bookDto)
+                } else {
+                    Toaster.showShort("页数必须大于1")
                 }
+            } else {
+                Toaster.showShort("页数格式错误")
             }
         },
         onCancel = {
@@ -117,10 +121,10 @@ private fun ManualAddSheetContent(
         )
         Divider(color = MaterialTheme.colorScheme.primary)
         CameraCard(
+            cameraState = cameraState,
             modifier = Modifier
                 .size(width = 130.dp, height = 180.dp)
-                .padding(vertical = 10.dp),
-            cameraState = cameraState
+                .padding(vertical = 10.dp)
         )
         InfoField(
             label = "书名",
@@ -149,7 +153,6 @@ private fun ManualAddSheetContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InfoField(
     label: String,
@@ -157,11 +160,10 @@ private fun InfoField(
     modifier: Modifier = Modifier,
     inputType: KeyboardType = KeyboardType.Text,
     isError: Boolean = false,
-    onValueChange: (String) -> Unit = { state.value = it }
 ) {
     OutlinedTextField(
         value = state.value,
-        onValueChange = onValueChange,
+        onValueChange = { state.value = it },
         label = { Text(text = label, style = MaterialTheme.typography.labelSmall) },
         keyboardOptions = KeyboardOptions(keyboardType = inputType),
         shape = RoundedCornerShape(15.dp),
@@ -173,11 +175,10 @@ private fun InfoField(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CameraCard(
-    modifier: Modifier = Modifier,
     cameraState: CameraState,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -208,7 +209,7 @@ private fun CameraCard(
                     launcher.launch(intent)
                 }
                 denied {
-                    ToastUtils.showShort("权限申请失败，请到权限中心开启权限")
+                    Toaster.showShort("权限申请失败，请到权限中心开启权限")
                 }
             }
         },

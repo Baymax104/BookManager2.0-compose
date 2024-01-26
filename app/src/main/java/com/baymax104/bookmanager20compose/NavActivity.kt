@@ -1,3 +1,8 @@
+@file:OptIn(
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterialApi::class
+)
 package com.baymax104.bookmanager20compose
 
 import android.os.Bundle
@@ -27,7 +32,6 @@ import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
  */
 class NavActivity : AppCompatActivity() {
 
-    @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,7 +58,6 @@ class NavActivity : AppCompatActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
     @Composable
     private fun rememberBottomSheetNavigator(): BottomSheetNavigator {
         val bottomSheetState = rememberModalBottomSheetState(

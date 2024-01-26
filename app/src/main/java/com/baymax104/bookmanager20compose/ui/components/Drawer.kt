@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.baymax104.bookmanager20compose.ui.components
 
 import androidx.activity.compose.BackHandler
@@ -41,7 +42,6 @@ import kotlinx.coroutines.launch
  * 侧边栏
  * @author John
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Drawer(
     drawerState: DrawerState,
@@ -66,7 +66,6 @@ fun Drawer(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DrawerSheet(
     content: @Composable ColumnScope.() -> Unit
@@ -80,7 +79,6 @@ private fun DrawerSheet(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DrawerButton(
     label: String,
@@ -140,7 +138,6 @@ private fun DrawerHeader(onCloseClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewDrawer() {

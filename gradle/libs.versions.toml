@@ -47,6 +47,8 @@ retrofit-kotlinx-serialization-convertor = "1.0.0"
 
 mapstruct = "1.5.5.Final"
 
+toaster = "12.6"
+
 [libraries]
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
@@ -101,3 +103,5 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+
+toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }

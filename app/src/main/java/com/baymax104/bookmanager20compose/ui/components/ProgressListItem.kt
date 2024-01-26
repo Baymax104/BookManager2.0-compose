@@ -34,6 +34,7 @@ import com.baymax104.bookmanager20compose.ui.theme.BookManagerFont
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.MainColor
 import com.baymax104.bookmanager20compose.ui.theme.MainColorShallow
+import com.baymax104.bookmanager20compose.util.toDateString
 
 /**
  * 主页列表项
@@ -81,7 +82,7 @@ fun LazyItemScope.ProgressItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = bookView.startTime,
+                    text = bookView.startTime.toDateString(),
                     fontFamily = BookManagerFont,
                     fontWeight = FontWeight.Normal,
                     fontSize = 13.sp,

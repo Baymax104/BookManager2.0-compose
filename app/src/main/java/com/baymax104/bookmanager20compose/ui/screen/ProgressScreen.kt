@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.bean.dto.BookDto
 import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
@@ -32,7 +31,7 @@ import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreen
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.util.requestPermission
-import com.blankj.utilcode.util.ToastUtils
+import com.hjq.toast.Toaster
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.result.EmptyResultRecipient
@@ -43,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProgressScreen(
     navigator: DestinationsNavigator,
-    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, BookDto>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>
 ) {
     val stateHolder: ProgressBookListState = viewModel()
     val bookListState = remember { stateHolder.bookList }
@@ -66,7 +65,7 @@ fun ProgressScreen(
         scanClick = {
             requestPermission(Manifest.permission.CAMERA) {
                 granted { navigator.navigate(ScanScreenDestination) }
-                denied { ToastUtils.showShort("权限申请失败，请到权限中心开启权限") }
+                denied { Toaster.showShort("权限申请失败，请到权限中心开启权限") }
             }
         },
         inputClick = {

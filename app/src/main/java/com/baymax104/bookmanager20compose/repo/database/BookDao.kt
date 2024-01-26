@@ -15,16 +15,19 @@ import java.util.Date
 interface BookDao {
 
     @Insert
-    suspend fun insertProcess(book: BookEntity): Long
+    suspend fun insertProgress(book: BookEntity): Long
 
     @Query("select * from Book where progress < 100 order by rank asc")
-    fun queryAllProcess(): MutableList<BookEntity>
+    fun queryAllProgress(): MutableList<BookEntity>
 
     @Query("select * from Book where progress >= 100 order by rank asc")
     suspend fun queryAllFinish(): MutableList<BookEntity>
 
     @Query("delete from Book where id in (:bookIds)")
     suspend fun deleteBooks(bookIds: List<Int>): Int
+
+    @Query("select count(*) from Book where progress < 100")
+    suspend fun countProgress(): Int
 
     @Update
     suspend fun updateBookRank(books: List<BookEntity>): Int

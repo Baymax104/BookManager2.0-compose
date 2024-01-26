@@ -47,7 +47,7 @@ import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
  * @param icon Icon资源id
  * @param modifier [Modifier]
  * @param state [FloatingMenuState]
- * @param clickClose 点击后是否自动关闭
+ * @param autoClose 点击后是否自动关闭
  * @param contentPadding 菜单按钮间距
  * @param content 子按钮作用域
  * @receiver [FloatingMenuScope]
@@ -58,7 +58,7 @@ fun FloatingMenu(
     icon: Int,
     modifier: Modifier = Modifier,
     state: FloatingMenuState = rememberFloatingMenuState(),
-    clickClose: Boolean = true,
+    autoClose: Boolean = true,
     contentPadding: Dp = 10.dp,
     content: FloatingMenuScope.() -> Unit
 ) {
@@ -111,7 +111,7 @@ fun FloatingMenu(
             FloatingMenuButton(
                 size = size,
                 item = item,
-                clickClose = clickClose,
+                autoClose = autoClose,
                 state = state,
                 modifier = Modifier
                     .padding(bottom = paddingAnims[index].dp)
@@ -137,7 +137,7 @@ fun FloatingMenu(
 private fun FloatingMenuButton(
     size: Dp,
     item: FloatingMenuItem,
-    clickClose: Boolean,
+    autoClose: Boolean,
     state: FloatingMenuState,
     modifier: Modifier = Modifier
 ) {
@@ -155,7 +155,7 @@ private fun FloatingMenuButton(
         FloatingActionButton(
             onClick = {
                 item.onClick()
-                if (clickClose) {
+                if (autoClose) {
                     state.close()
                 }
             },

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.baymax104.bookmanager20compose.bean.dto.BookDto
 import com.baymax104.bookmanager20compose.bean.mapper.ProgressMapper
 import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.repo.BookRepo
@@ -23,7 +22,12 @@ class ProgressBookListState(
 
     init {
         viewModelScope.launch {
-//            bookList.addAll(repo.queryAllProgressBook())
+            repo.queryAllProgressBooks()
+                .map {
+                    ProgressMapper.entity2View(it)
+                }.let {
+                    bookList.addAll(it)
+                }
         }
     }
 
@@ -32,14 +36,14 @@ class ProgressBookListState(
         return ProgressMapper.dto2View(bookDto)
     }
 
-    suspend fun insertBook(bookDto: BookDto) {
-//        bookDto.apply {
-//            startTime = Date()
-//            tableRank = bookList.size
-//        }
-//        val insertedBook = repo.insertProgressBook(bookDto)
-//        bookList.add(insertedBook)
+    suspend fun insertBook(bookView: ProgressBookView) {
+        ProgressMapper.view2Entity(bookView).let {
+            repo.insertProgressBook(it)
+        }.let {
+            ProgressMapper.entity2View(it)
+        }.let {
+            bookList.add(it)
+        }
     }
-
 
 }

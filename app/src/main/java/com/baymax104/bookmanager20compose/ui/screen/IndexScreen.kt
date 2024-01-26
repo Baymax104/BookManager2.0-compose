@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 package com.baymax104.bookmanager20compose.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -15,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
-import com.baymax104.bookmanager20compose.bean.dto.BookDto
+import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
@@ -23,10 +24,8 @@ import com.baymax104.bookmanager20compose.ui.components.IndexTransition
 import com.baymax104.bookmanager20compose.ui.components.TopBar
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
-//import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddSheetDestination
-//import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
-import com.blankj.utilcode.util.ToastUtils
+import com.hjq.toast.Toaster
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -40,14 +39,13 @@ import kotlinx.coroutines.launch
 /**
  * 主页
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
 @Destination(style = IndexTransition::class)
 @Composable
 fun IndexScreen(
     navigator: DestinationsNavigator,
     scanRecipient: ResultRecipient<ScanScreenDestination, String>,
-    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, BookDto>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -61,9 +59,9 @@ fun IndexScreen(
                     val book = progressBookListState.requestBook(it.value)
                     if (book != null) {
                         // TODO 展示
-                        ToastUtils.showShort("展示")
+                        Toaster.showShort("展示")
                     } else {
-                        ToastUtils.showShort("请求失败")
+                        Toaster.showShort("请求失败")
                     }
                 }
             }
@@ -77,7 +75,7 @@ fun IndexScreen(
                 }
             },
             onActionClick = {
-                ToastUtils.showShort("Action")
+                Toaster.showShort("Action")
             },
             pages = listOf(IndexPage.Progress, IndexPage.Finish)
         ) {
@@ -94,10 +92,6 @@ fun IndexScreen(
  * @param onLeftNavClick 左侧导航按钮回调
  * @param onActionClick 右侧行为按钮回调
  */
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
-)
 @Composable
 private fun IndexContent(
     onLeftNavClick: () -> Unit,

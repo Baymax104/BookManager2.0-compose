@@ -5,6 +5,9 @@ import com.baymax104.bookmanager20compose.repo.API_KEY
 import com.baymax104.bookmanager20compose.repo.BASE_URL
 import com.baymax104.bookmanager20compose.util.JsonCoder
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -22,7 +25,6 @@ object WebService {
     val retrofit: Retrofit
 
     init {
-
         val logger = HttpLoggingInterceptor {
             Log.i("BookManager-log-web", it)
         }.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -53,8 +55,6 @@ object WebService {
             .baseUrl(BASE_URL)
             .build()
     }
-
-    inline fun <reified T> create(): T = retrofit.create()
 }
 
 /**
@@ -62,4 +62,13 @@ object WebService {
  * @param S 服务接口类型
  * @return 服务实例
  */
-inline fun <reified S> service(): Lazy<S> = lazy { WebService.create() }
+inline fun <reified S> service(): Lazy<S> = lazy { WebService.retrofit.create() }
+
+/**
+ * IO处理
+ *
+ * @param T 返回值类型
+ * @param block 处理块
+ * @return 块返回值
+ */
+suspend fun <T> io(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)

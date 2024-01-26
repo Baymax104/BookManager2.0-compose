@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalFoundationApi::class)
 package com.baymax104.bookmanager20compose.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
  * 底部导航栏
  * @author John
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomBar(
     indexPages: List<IndexPage>,
@@ -89,7 +89,6 @@ private fun RowScope.NavItem(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PreviewNav() {

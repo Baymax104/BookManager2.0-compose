@@ -18,7 +18,6 @@ val BookManagerFont = FontFamily(
     Font(R.font.noto_thin, FontWeight.Thin)
 )
 
-@Suppress("DEPRECATION")
 val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = BookManagerFont,

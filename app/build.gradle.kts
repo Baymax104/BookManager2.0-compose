@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.8.21"
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 
 android {
@@ -108,5 +109,6 @@ dependencies {
     implementation(libs.camera.scan)
     implementation(libs.viewfinderview)
     implementation(libs.mapstruct)
-    ksp(libs.mapstruct.processor)
+    kapt(libs.mapstruct.processor)
+    implementation(libs.toaster)
 }

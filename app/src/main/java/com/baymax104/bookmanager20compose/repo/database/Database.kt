@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.withTransaction
 import com.baymax104.bookmanager20compose.bean.entity.BookEntity
 import com.baymax104.bookmanager20compose.bean.entity.HistoryEntity
 import com.baymax104.bookmanager20compose.util.RoomConverter
@@ -45,20 +46,18 @@ abstract class LocalDatabase : RoomDatabase() {
 
 }
 
-val Database: LocalDatabase by lazy {
-    Room
-        .databaseBuilder(
-            Utils.getApp(),
-            LocalDatabase::class.java,
-            LocalDatabase.DatabaseName
-        )
-        .fallbackToDestructiveMigration()
-        .build()
-}
-
 /**
  * 创建数据库Mapper实例
  * @param T Mapper类型
  * @return Mapper实例
  */
 inline fun <reified T> dao(): Lazy<T> = lazy { LocalDatabase.Database.create() }
+
+/**
+ * 事务处理
+ *
+ * @param R 返回值类型
+ * @param block 处理块
+ * @return 块返回值
+ */
+suspend fun <R> transaction(block: suspend () -> R): R = LocalDatabase.Database.withTransaction(block)
