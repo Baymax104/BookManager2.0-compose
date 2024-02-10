@@ -124,9 +124,7 @@ private fun ProgressBar(
     total: Int,
     modifier: Modifier = Modifier
 ) {
-    Canvas(
-        modifier = modifier
-    ) {
+    Canvas(modifier = modifier) {
         val strokeWidth = size.height
         val ratio = (progress * 1.0 / total).toFloat()
         drawIndicator(0f, 1f, MainColorShallow, strokeWidth)

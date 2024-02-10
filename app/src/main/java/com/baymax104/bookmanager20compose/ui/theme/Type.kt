@@ -66,7 +66,13 @@ val Typography = Typography(
     displayMedium = TextStyle(
         fontFamily = BookManagerFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
+        fontSize = 13.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    displaySmall = TextStyle(
+        fontFamily = BookManagerFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 13.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
 )

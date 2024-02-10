@@ -20,8 +20,6 @@ interface IProgressMapper {
     @Mappings(
         Mapping(source = "summary", target = "description"),
         Mapping(source = "img", target = "image"),
-        Mapping(target = "title", ignore = true),
-        Mapping(target = "author", ignore = true),
     )
     fun dto2View(dto: BookDto): ProgressBookView
 

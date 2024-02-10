@@ -43,7 +43,7 @@ import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.CameraState
 import com.baymax104.bookmanager20compose.ui.components.SelectionHeader
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
-import com.baymax104.bookmanager20compose.util.ImageUtil
+import com.baymax104.bookmanager20compose.util.ImageUtils
 import com.baymax104.bookmanager20compose.util.requestPermission
 import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.UriUtils
@@ -123,7 +123,7 @@ private fun ManualAddSheetContent(
         CameraCard(
             cameraState = cameraState,
             modifier = Modifier
-                .size(width = 130.dp, height = 180.dp)
+                .size(width = 140.dp, height = 180.dp)
                 .padding(vertical = 10.dp)
         )
         InfoField(
@@ -188,8 +188,8 @@ private fun CameraCard(
         if (it.resultCode == RESULT_OK) {
             scope.launch {
                 val file = File(cameraState.photoFilePath)
-                val dest = ImageUtil.createFile()
-                val compressed = ImageUtil.compress(context, file, dest)
+                val dest = ImageUtils.createFile()
+                val compressed = ImageUtils.compress(context, file, dest)
                 cameraState.apply {
                     photoFilePath = compressed.absolutePath
                     isShow = true
@@ -202,7 +202,7 @@ private fun CameraCard(
         onClick = {
             requestPermission(Manifest.permission.CAMERA) {
                 granted {
-                    val file = ImageUtil.createCacheFile()
+                    val file = ImageUtils.createCacheFile()
                     cameraState.photoFilePath = file.absolutePath
                     val uri = UriUtils.file2Uri(file)
                     val intent = IntentUtils.getCaptureIntent(uri)

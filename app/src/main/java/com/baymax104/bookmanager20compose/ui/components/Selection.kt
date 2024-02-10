@@ -77,9 +77,9 @@ fun SelectionHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
+            .padding(horizontal = 10.dp)
             .fillMaxWidth()
             .height(50.dp)
-            .padding(horizontal = 10.dp)
     ) {
         TextButton(
             onClick = onCancel,
@@ -93,7 +93,11 @@ fun SelectionHeader(
                 style = MaterialTheme.typography.labelMedium
             )
         }
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
         TextButton(
             onClick = onConfirm,
             colors = ButtonDefaults.textButtonColors(
@@ -113,6 +117,6 @@ fun SelectionHeader(
 @Composable
 fun PreviewSelection() {
     BookManagerTheme {
-        SelectionHeader()
+        SelectionHeader("Hello")
     }
 }

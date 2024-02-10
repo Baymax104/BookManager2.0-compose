@@ -13,15 +13,15 @@ import java.util.Date
 data class BookEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    var title: String? = null,
+    var title: String = "",
     var page: Int = 0,
-    var author: String? = null,
+    var author: String = "",
     var progress: Int = 0,
     var startTime: Date? = null,
     var endTime: Date? = null,
-    var image: String? = null,
-    var publisher: String? = null,
-    var isbn: String? = null,
-    var description: String? = null,
+    var image: String = "",
+    var publisher: String = "",
+    var isbn: String = "",
+    var description: String = "",
     var rank: Int = -1,
 )

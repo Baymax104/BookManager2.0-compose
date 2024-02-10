@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.baymax104.bookmanager20compose.bean.mapper.ProgressMapper
 import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.repo.BookRepo
+import com.baymax104.bookmanager20compose.util.ImageUtils
+import com.blankj.utilcode.util.Utils
 import kotlinx.coroutines.launch
 
 /**
@@ -23,26 +25,30 @@ class ProgressBookListState(
     init {
         viewModelScope.launch {
             repo.queryAllProgressBooks()
-                .map {
-                    ProgressMapper.entity2View(it)
-                }.let {
-                    bookList.addAll(it)
-                }
+                .map { ProgressMapper.entity2View(it) }
+                .let { bookList.addAll(it) }
         }
     }
 
-    suspend fun requestBook(isbn: String): ProgressBookView? {
-        val bookDto = repo.requestBook(isbn) ?: return null
-        return ProgressMapper.dto2View(bookDto)
+    suspend fun requestBook(isbn: String): Result<ProgressBookView> {
+        return runCatching {
+            val bookDto = repo.requestBook(isbn) ?: throw NullPointerException("图书请求失败")
+            ProgressMapper.dto2View(bookDto)
+        }
     }
 
-    suspend fun insertBook(bookView: ProgressBookView) {
-        ProgressMapper.view2Entity(bookView).let {
-            repo.insertProgressBook(it)
-        }.let {
-            ProgressMapper.entity2View(it)
-        }.let {
-            bookList.add(it)
+    suspend fun addRequestBook(bookView: ProgressBookView) {
+        val file = ImageUtils.download(Utils.getApp(), bookView.image)
+        bookView.image = file.absolutePath
+
+    }
+
+    suspend fun addBook(bookView: ProgressBookView): Result<Unit> {
+        return runCatching {
+            val entity = ProgressMapper.view2Entity(bookView)
+            val insertedBook = repo.insertProgressBook(entity)
+            val view = ProgressMapper.entity2View(insertedBook)
+            bookList.add(view)
         }
     }
 

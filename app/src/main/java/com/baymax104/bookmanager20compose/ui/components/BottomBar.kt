@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.baymax104.bookmanager20compose.ui.screen.IndexPage
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.baymax104.bookmanager20compose.ui.theme.ContainerColor
@@ -82,6 +83,7 @@ private fun RowScope.NavItem(
         label = {
             Text(
                 text = indexPage.label,
+                fontSize = 10.sp,
                 style = MaterialTheme.typography.labelSmall,
             )
         },

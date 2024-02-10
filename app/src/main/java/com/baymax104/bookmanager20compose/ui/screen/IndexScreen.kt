@@ -14,14 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baymax104.bookmanager20compose.R
 import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
-import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.BottomBar
 import com.baymax104.bookmanager20compose.ui.components.Drawer
 import com.baymax104.bookmanager20compose.ui.components.IndexTransition
 import com.baymax104.bookmanager20compose.ui.components.TopBar
+import com.baymax104.bookmanager20compose.ui.screen.destinations.BookInfoScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
@@ -31,7 +30,6 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.result.EmptyResultRecipient
-import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import kotlinx.coroutines.launch
 
@@ -45,28 +43,13 @@ import kotlinx.coroutines.launch
 fun IndexScreen(
     navigator: DestinationsNavigator,
     scanRecipient: ResultRecipient<ScanScreenDestination, String>,
-    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>,
+    infoRecipient: ResultRecipient<BookInfoScreenDestination, ProgressBookView>
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val progressBookListState: ProgressBookListState = viewModel()
 
-    scanRecipient.onNavResult {
-        when (it) {
-            is NavResult.Canceled -> {}
-            is NavResult.Value -> {
-                scope.launch {
-                    val book = progressBookListState.requestBook(it.value)
-                    if (book != null) {
-                        // TODO 展示
-                        Toaster.showShort("展示")
-                    } else {
-                        Toaster.showShort("请求失败")
-                    }
-                }
-            }
-        }
-    }
+
     Drawer(drawerState) {
         IndexContent(
             onLeftNavClick = {
@@ -80,8 +63,16 @@ fun IndexScreen(
             pages = listOf(IndexPage.Progress, IndexPage.Finish)
         ) {
             when (it) {
-                0 -> ProgressScreen(navigator, manualAddRecipient)
-                1 -> FinishScreen()
+                0 -> ProgressScreen(
+                    navigator,
+                    manualAddRecipient,
+                    scanRecipient,
+                    infoRecipient
+                )
+
+                1 -> FinishScreen(
+
+                )
             }
         }
     }
@@ -128,6 +119,7 @@ fun Preview() {
     BookManagerTheme {
         IndexScreen(
             EmptyDestinationsNavigator,
+            EmptyResultRecipient(),
             EmptyResultRecipient(),
             EmptyResultRecipient()
         )

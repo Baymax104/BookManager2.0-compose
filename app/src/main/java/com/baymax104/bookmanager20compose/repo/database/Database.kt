@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.Utils
  * @author John
  */
 @TypeConverters(RoomConverter::class)
-@Database(entities = [BookEntity::class, HistoryEntity::class], version = 4, exportSchema = false)
+@Database(entities = [BookEntity::class, HistoryEntity::class], version = 5, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
 
     companion object {

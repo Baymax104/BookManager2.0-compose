@@ -27,6 +27,7 @@ import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
+import com.baymax104.bookmanager20compose.ui.screen.destinations.BookInfoScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
@@ -42,20 +43,43 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProgressScreen(
     navigator: DestinationsNavigator,
-    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>
+    manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>,
+    scanRecipient: ResultRecipient<ScanScreenDestination, String>,
+    infoRecipient: ResultRecipient<BookInfoScreenDestination, ProgressBookView>
 ) {
     val stateHolder: ProgressBookListState = viewModel()
     val bookListState = remember { stateHolder.bookList }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    scanRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> {}
+            is NavResult.Value -> {
+                scope.launch {
+                    stateHolder.requestBook(result.value)
+                        .onSuccess { navigator.navigate(BookInfoScreenDestination(it)) }
+                        .onFailure { Toaster.showShort(it.message) }
+                }
+            }
+        }
+    }
     manualAddRecipient.onNavResult {
         when (it) {
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
                 scope.launch {
-                    stateHolder.insertBook(it.value)
-                    listState.animateScrollToItem(bookListState.lastIndex)
+                    stateHolder.addBook(it.value)
+                        .onSuccess { Toaster.showShort("添加成功") }
+                        .onFailure { Toaster.showShort("添加失败") }
                 }
+            }
+        }
+    }
+    infoRecipient.onNavResult {
+        when (it) {
+            is NavResult.Canceled -> {}
+            is NavResult.Value -> {
+                Toaster.showShort("Hello")
             }
         }
     }
@@ -140,7 +164,9 @@ fun PreviewProgress() {
     BookManagerTheme {
         ProgressScreen(
             navigator = EmptyDestinationsNavigator,
-            manualAddRecipient = EmptyResultRecipient()
+            manualAddRecipient = EmptyResultRecipient(),
+            scanRecipient = EmptyResultRecipient(),
+            infoRecipient = EmptyResultRecipient(),
         )
     }
 }

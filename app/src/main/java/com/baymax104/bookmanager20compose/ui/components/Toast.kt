@@ -36,7 +36,7 @@ fun SuccessToast(
 ) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 15.dp)
+            .padding(horizontal = 30.dp)
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
@@ -46,7 +46,7 @@ fun SuccessToast(
                     color = Color(0xff00c853),
                     shape = RoundedCornerShape(15.dp)
                 )
-                .padding(horizontal = 15.dp, vertical = 10.dp)
+                .padding(horizontal = 15.dp, vertical = 15.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
@@ -108,8 +108,8 @@ fun ErrorToast(
 fun PreviewToast() {
     BookManagerTheme {
         Column {
-            SuccessToast(message = "Hello")
-            ErrorToast(message = "Hello")
+            SuccessToast("Hello")
+//            ErrorToast(message = "Hello")
         }
     }
 }
