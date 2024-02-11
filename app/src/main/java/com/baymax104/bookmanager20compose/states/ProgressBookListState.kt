@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.baymax104.bookmanager20compose.bean.mapper.ProgressMapper
 import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.repo.BookRepo
-import com.baymax104.bookmanager20compose.util.ImageUtils
-import com.blankj.utilcode.util.Utils
 import kotlinx.coroutines.launch
 
 /**
@@ -35,12 +33,6 @@ class ProgressBookListState(
             val bookDto = repo.requestBook(isbn) ?: throw NullPointerException("图书请求失败")
             ProgressMapper.dto2View(bookDto)
         }
-    }
-
-    suspend fun addRequestBook(bookView: ProgressBookView) {
-        val file = ImageUtils.download(Utils.getApp(), bookView.image)
-        bookView.image = file.absolutePath
-
     }
 
     suspend fun addBook(bookView: ProgressBookView): Result<Unit> {

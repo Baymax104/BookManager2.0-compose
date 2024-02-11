@@ -28,24 +28,24 @@ sealed class NavTransition(
     }
 }
 
-object IndexTransition : NavTransition(
+object LeftInTransition : NavTransition(
     enter = {
         slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) +
-                fadeIn(animationSpec = tween(200))
+                fadeIn(animationSpec = tween(400))
     },
     exit = {
         slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) +
-                fadeOut(animationSpec = tween(200))
+                fadeOut(animationSpec = tween(400))
     }
 )
 
-object ScanTransition : NavTransition(
+object RightInTransition : NavTransition(
     enter = {
         slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) +
-                fadeIn(animationSpec = tween(200))
+                fadeIn(animationSpec = tween(400))
     },
     exit = {
         slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) +
-                fadeOut(animationSpec = tween(200))
+                fadeOut(animationSpec = tween(400))
     }
 )

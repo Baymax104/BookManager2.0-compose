@@ -20,7 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import com.baymax104.bookmanager20compose.R
 import com.baymax104.bookmanager20compose.states.ScannerState
-import com.baymax104.bookmanager20compose.ui.components.ScanTransition
+import com.baymax104.bookmanager20compose.ui.components.RightInTransition
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
 import com.king.view.viewfinderview.ViewfinderView
 import com.ramcosta.composedestinations.annotation.Destination
@@ -31,7 +31,7 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 /**
  * 扫码页
  */
-@Destination(style = ScanTransition::class)
+@Destination(style = RightInTransition::class)
 @Composable
 fun ScanScreen(
     resultNavigator: ResultBackNavigator<String>

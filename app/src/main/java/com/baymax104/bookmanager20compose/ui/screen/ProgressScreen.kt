@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +26,7 @@ import com.baymax104.bookmanager20compose.bean.vo.ProgressBookView
 import com.baymax104.bookmanager20compose.states.ProgressBookListState
 import com.baymax104.bookmanager20compose.ui.components.FloatingMenu
 import com.baymax104.bookmanager20compose.ui.components.ProgressItem
-import com.baymax104.bookmanager20compose.ui.screen.destinations.BookInfoScreenDestination
+import com.baymax104.bookmanager20compose.ui.screen.destinations.InfoScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ManualAddScreenDestination
 import com.baymax104.bookmanager20compose.ui.screen.destinations.ScanScreenDestination
 import com.baymax104.bookmanager20compose.ui.theme.BookManagerTheme
@@ -45,10 +44,9 @@ fun ProgressScreen(
     navigator: DestinationsNavigator,
     manualAddRecipient: ResultRecipient<ManualAddScreenDestination, ProgressBookView>,
     scanRecipient: ResultRecipient<ScanScreenDestination, String>,
-    infoRecipient: ResultRecipient<BookInfoScreenDestination, ProgressBookView>
+    infoRecipient: ResultRecipient<InfoScreenDestination, ProgressBookView>
 ) {
-    val stateHolder: ProgressBookListState = viewModel()
-    val bookListState = remember { stateHolder.bookList }
+    val bookListState: ProgressBookListState = viewModel()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     scanRecipient.onNavResult { result ->
@@ -56,8 +54,8 @@ fun ProgressScreen(
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
                 scope.launch {
-                    stateHolder.requestBook(result.value)
-                        .onSuccess { navigator.navigate(BookInfoScreenDestination(it)) }
+                    bookListState.requestBook(result.value)
+                        .onSuccess { navigator.navigate(InfoScreenDestination(it)) }
                         .onFailure { Toaster.showShort(it.message) }
                 }
             }
@@ -68,8 +66,11 @@ fun ProgressScreen(
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
                 scope.launch {
-                    stateHolder.addBook(it.value)
-                        .onSuccess { Toaster.showShort("添加成功") }
+                    bookListState.addBook(it.value)
+                        .onSuccess {
+                            listState.animateScrollToItem(bookListState.bookList.lastIndex)
+                            Toaster.showShort("添加成功")
+                        }
                         .onFailure { Toaster.showShort("添加失败") }
                 }
             }
@@ -79,12 +80,19 @@ fun ProgressScreen(
         when (it) {
             is NavResult.Canceled -> {}
             is NavResult.Value -> {
-                Toaster.showShort("Hello")
+                scope.launch {
+                    bookListState.addBook(it.value)
+                        .onSuccess {
+                            listState.animateScrollToItem(bookListState.bookList.lastIndex)
+                            Toaster.showShort("添加成功")
+                        }
+                        .onFailure { Toaster.showShort("添加失败") }
+                }
             }
         }
     }
     ProgressContent(
-        books = bookListState,
+        books = bookListState.bookList,
         lazyListState = listState,
         scanClick = {
             requestPermission(Manifest.permission.CAMERA) {
@@ -110,8 +118,8 @@ private fun ProgressContent(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         ProgressListContent(
@@ -152,7 +160,9 @@ private fun ProgressListContent(
                 items = books,
                 key = { it.id },
             ) {
-                ProgressItem(it)
+                ProgressItem(it) {
+
+                }
             }
         }
     }

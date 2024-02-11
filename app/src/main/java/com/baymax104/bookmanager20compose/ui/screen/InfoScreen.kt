@@ -44,7 +44,7 @@ import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
  */
 @Destination(style = DestinationStyleBottomSheet::class)
 @Composable
-fun BookInfoScreen(
+fun InfoScreen(
     book: ProgressBookView,
     navigator: ResultBackNavigator<ProgressBookView>
 ) {
@@ -195,7 +195,7 @@ private fun VerticalLine(
 @Composable
 fun PreviewInfo() {
     BookManagerTheme {
-        BookInfoScreen(
+        InfoScreen(
             ProgressBookView(),
             navigator = EmptyResultBackNavigator()
         )
